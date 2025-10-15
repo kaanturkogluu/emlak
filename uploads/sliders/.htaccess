@@ -1,0 +1,14 @@
+# Slider resimleri güvenlik ayarları
+Options -Indexes
+
+# Sadece resim dosyalarına izin ver
+<FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Diğer dosya türlerini engelle
+<FilesMatch "\.(php|php3|php4|php5|phtml|pl|py|jsp|asp|sh|cgi)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>

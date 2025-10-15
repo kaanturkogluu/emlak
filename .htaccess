@@ -1,0 +1,41 @@
+RewriteEngine On
+
+# Test kuralı
+RewriteRule ^test/?$ test-rewrite.php [L]
+
+# Admin paneli yönlendirmeleri - Önce bunlar kontrol edilmeli
+RewriteRule ^giris/?$ admin/login.php [L]
+RewriteRule ^admin/?$ admin/index.php [L]
+RewriteRule ^admin/ilanlar/?$ admin/properties.php [L]
+RewriteRule ^admin/ilan/ekle/?$ admin/property-add.php [L]
+RewriteRule ^admin/ilan/duzenle/([0-9]+)/?$ admin/property-edit.php?id=$1 [L]
+RewriteRule ^admin/slider/?$ admin/sliders.php [L]
+RewriteRule ^admin/slider/ekle/?$ admin/slider-edit-page.php [L]
+RewriteRule ^admin/slider/duzenle/([0-9]+)/?$ admin/slider-edit-page.php?id=$1 [L]
+
+RewriteRule ^admin/anasayfa/?$ admin/index.php [L]
+
+# Sayfa yönlendirmeleri
+RewriteRule ^(anasayfa)?$ pages/anasayfa.php [L]
+RewriteRule ^hakkimizda/?$ pages/hakkimizda.php [L]
+RewriteRule ^iletisim/?$ pages/iletisim.php [L]
+RewriteRule ^ilanlar/?$ pages/ilanlar.php [L]
+
+# Kategori yönlendirmeleri
+RewriteRule ^satilik/?$ pages/satilik.php [L]
+RewriteRule ^kiralik/?$ pages/kiralik.php [L]
+RewriteRule ^satilik-([^/]+)/?$ pages/satilik.php?category=$1 [L]
+RewriteRule ^kiralik-([^/]+)/?$ pages/kiralik.php?category=$1 [L]
+
+# İlan detay sayfası
+RewriteRule ^ilan/([^/]+)/?$ pages/ilan-detay.php?slug=$1 [L]
+
+# Şehir sayfaları
+RewriteRule ^sehir/([^/]+)/?$ pages/sehir.php?slug=$1 [L]
+RewriteRule ^sehir/([^/]+)/([^/]+)/?$ pages/ilce.php?city=$1&district=$2 [L]
+
+# Arama sayfası
+RewriteRule ^arama/?$ pages/arama.php [L]
+
+# Varsayılan açılış dosyası
+DirectoryIndex pages/anasayfa.php

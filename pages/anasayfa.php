@@ -1,0 +1,637 @@
+<?php 
+
+require_once __DIR__."/../includes/header.php";
+require_once __DIR__."/../classes/Slider.php";
+
+$slider = new Slider();
+$sliders = $slider->getActive();
+
+?>
+
+    <!-- Floating Phone Button -->
+    <a href="tel:02125550000" class="floating-phone" aria-label="Hemen Ara">
+        <i class="fas fa-phone-alt"></i>
+    </a>
+
+    <!-- Hero Slider -->
+    <section class="hero-slider" id="home">
+        <?php if (!empty($sliders)): ?>
+            <?php foreach ($sliders as $index => $sliderItem): ?>
+                <div class="slide <?php echo $index === 0 ? 'active' : ''; ?>" style="background-image: url('<?php echo $helper->e($sliderItem['image']); ?>');">
+                    <div class="slide-overlay">
+                        <div class="slide-content">
+                            <?php if (!empty($sliderItem['title'])): ?>
+                                <h1><?php echo $helper->e($sliderItem['title']); ?></h1>
+                            <?php endif; ?>
+                            
+                            <?php if (!empty($sliderItem['subtitle'])): ?>
+                                <p><?php echo $helper->e($sliderItem['subtitle']); ?></p>
+                            <?php endif; ?>
+                            
+                            <?php if (!empty($sliderItem['button_text']) && !empty($sliderItem['button_url'])): ?>
+                                <a href="<?php echo $helper->e($sliderItem['button_url']); ?>" class="btn"><?php echo $helper->e($sliderItem['button_text']); ?></a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+       
+        <?php endif; ?>
+
+        <?php if (count($sliders) > 1): ?>
+            <div class="slider-arrow prev" onclick="changeSlide(-1)">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="slider-arrow next" onclick="changeSlide(1)">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+
+            <div class="slider-controls">
+                <?php foreach ($sliders as $index => $sliderItem): ?>
+                    <span class="slider-dot <?php echo $index === 0 ? 'active' : ''; ?>" onclick="currentSlide(<?php echo $index; ?>)"></span>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </section>
+
+    <!-- Search Section -->
+    <div class="search-section">
+        <div class="search-tabs">
+            <button class="search-tab active">Satılık</button>
+            <button class="search-tab">Kiralık</button>
+            <button class="search-tab">Günlük Kiralık</button>
+        </div>
+        <form class="search-form">
+            <select class="search-input">
+                <option>Tüm İl</option>
+                <option>İstanbul</option>
+                <option>Ankara</option>
+                <option>İzmir</option>
+                <option>Antalya</option>
+                <option>Bursa</option>
+            </select>
+            <select class="search-input">
+                <option>Emlak Tipi</option>
+                <option>Daire</option>
+                <option>Villa</option>
+                <option>Arsa</option>
+                <option>İşyeri</option>
+            </select>
+            <input type="number" class="search-input" placeholder="Min Fiyat">
+            <input type="number" class="search-input" placeholder="Max Fiyat">
+            <button type="submit" class="btn" style="width: 100%;">
+                <i class="fas fa-search"></i> Ara
+            </button>
+        </form>
+    </div>
+
+    <!-- Vitrin İlanlarımız Section -->
+    <section class="vitrin-section">
+        <div class="vitrin-header">
+            <h2>Vitrin İlanlarımız</h2>
+            <p>Popüler ve Öne Çıkan İlanlarımız Aşağıda Listelenmiştir</p>
+        </div>
+
+        <div class="vitrin-slider-container">
+            <div class="vitrin-slider" id="vitrinSlider">
+                <!-- Group 1 -->
+                <div class="vitrin-group">
+                    <div class="vitrin-card">
+                        <div class="vitrin-image-container">
+                            <div class="vitrin-image-slider" data-ilan="0">
+                                <div class="vitrin-image active">
+                                    <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&h=400&fit=crop" alt="Villa">
+                                </div>
+                                <div class="vitrin-image">
+                                    <img src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=600&h=400&fit=crop" alt="Villa">
+                                </div>
+                                <div class="vitrin-image">
+                                    <img src="https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=600&h=400&fit=crop" alt="Villa">
+                                </div>
+                            </div>
+                            <div class="vitrin-location">İstanbul / Sarıyer</div>
+                            <div class="vitrin-type-badge">VILLA</div>
+                        </div>
+                        <div class="vitrin-details">
+                            <div class="vitrin-title">
+                                1400 m² Satılık Lüks Villa
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="vitrin-price">₺8.500.000</div>
+                        </div>
+                    </div>
+
+                    <div class="vitrin-card">
+                        <div class="vitrin-image-container">
+                            <div class="vitrin-image-slider" data-ilan="1">
+                                <div class="vitrin-image active">
+                                    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop" alt="Villa">
+                                </div>
+                                <div class="vitrin-image">
+                                    <img src="https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=600&h=400&fit=crop" alt="Villa">
+                                </div>
+                                <div class="vitrin-image">
+                                    <img src="https://images.unsplash.com/photo-1600563438938-a9a27216b4f5?w=600&h=400&fit=crop" alt="Villa">
+                                </div>
+                            </div>
+                            <div class="vitrin-location">Antalya / Belek</div>
+                            <div class="vitrin-type-badge">VILLA</div>
+                        </div>
+                        <div class="vitrin-details">
+                            <div class="vitrin-title">
+                                Deniz Manzaralı Havuzlu Villa
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="vitrin-price">₺12.000.000</div>
+                        </div>
+                    </div>
+
+                    <div class="vitrin-card">
+                        <div class="vitrin-image-container">
+                            <div class="vitrin-image-slider" data-ilan="2">
+                                <div class="vitrin-image active">
+                                    <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&h=400&fit=crop" alt="Ev">
+                                </div>
+                                <div class="vitrin-image">
+                                    <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=600&h=400&fit=crop" alt="Ev">
+                                </div>
+                                <div class="vitrin-image">
+                                    <img src="https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=600&h=400&fit=crop" alt="Ev">
+                                </div>
+                            </div>
+                            <div class="vitrin-location">İzmir / Çeşme</div>
+                            <div class="vitrin-type-badge">KONUT</div>
+                        </div>
+                        <div class="vitrin-details">
+                            <div class="vitrin-title">
+                                Modern Lüks Residence Daire
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="vitrin-price">₺4.750.000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Group 2 -->
+                <div class="vitrin-group">
+                    <div class="vitrin-card">
+                        <div class="vitrin-image-container">
+                            <div class="vitrin-image-slider" data-ilan="3">
+                                <div class="vitrin-image active">
+                                    <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&h=400&fit=crop" alt="Villa">
+                                </div>
+                                <div class="vitrin-image">
+                                    <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=600&h=400&fit=crop" alt="Villa">
+                                </div>
+                                <div class="vitrin-image">
+                                    <img src="https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=600&h=400&fit=crop" alt="Villa">
+                                </div>
+                            </div>
+                            <div class="vitrin-location">Muğla / Bodrum</div>
+                            <div class="vitrin-type-badge">VILLA</div>
+                        </div>
+                        <div class="vitrin-details">
+                            <div class="vitrin-title">
+                                Bahçeli Triplex Villa
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="vitrin-price">₺9.200.000</div>
+                        </div>
+                    </div>
+
+                    <div class="vitrin-card">
+                        <div class="vitrin-image-container">
+                            <div class="vitrin-image-slider" data-ilan="4">
+                                <div class="vitrin-image active">
+                                    <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&h=400&fit=crop" alt="Daire">
+                                </div>
+                                <div class="vitrin-image">
+                                    <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&h=400&fit=crop" alt="Daire">
+                                </div>
+                                <div class="vitrin-image">
+                                    <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=600&h=400&fit=crop" alt="Daire">
+                                </div>
+                            </div>
+                            <div class="vitrin-location">İstanbul / Kadıköy</div>
+                            <div class="vitrin-type-badge">DAİRE</div>
+                        </div>
+                        <div class="vitrin-details">
+                            <div class="vitrin-title">
+                                Boğaz Manzaralı Penthouse
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="vitrin-price">₺6.800.000</div>
+                        </div>
+                    </div>
+
+                    <div class="vitrin-card">
+                        <div class="vitrin-image-container">
+                            <div class="vitrin-image-slider" data-ilan="5">
+                                <div class="vitrin-image active">
+                                    <img src="https://images.unsplash.com/photo-1464146072230-91cabc968266?w=600&h=400&fit=crop" alt="Arsa">
+                                </div>
+                                <div class="vitrin-image">
+                                    <img src="https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=600&h=400&fit=crop" alt="Arsa">
+                                </div>
+                                <div class="vitrin-image">
+                                    <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&h=400&fit=crop" alt="Arsa">
+                                </div>
+                            </div>
+                            <div class="vitrin-location">Bursa / Mudanya</div>
+                            <div class="vitrin-type-badge">ARSA</div>
+                        </div>
+                        <div class="vitrin-details">
+                            <div class="vitrin-title">
+                                Deniz Kenarı İmarlı Arsa
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="vitrin-price">₺3.500.000</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="vitrin-dots">
+                <div class="vitrin-dot active" onclick="goToVitrinGroup(0)"></div>
+                <div class="vitrin-dot" onclick="goToVitrinGroup(1)"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Properties Section -->
+    <section class="properties-section" id="properties">
+        <div class="section-header">
+            <h2>Öne Çıkan İlanlar</h2>
+            <p>En yeni ve en popüler gayrimenkul ilanlarımız</p>
+        </div>
+
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Tümü</button>
+            <button class="filter-btn" data-filter="daire">Daire</button>
+            <button class="filter-btn" data-filter="villa">Villa</button>
+            <button class="filter-btn" data-filter="arsa">Arsa</button>
+            <button class="filter-btn" data-filter="isyeri">İşyeri</button>
+        </div>
+
+        <div class="properties-grid">
+            <!-- Property Card 1 -->
+            <div class="property-card" data-category="villa">
+                <div class="property-image">
+                    <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&h=600&fit=crop" alt="Villa">
+                    <div class="property-badge featured">Öne Çıkan</div>
+                    <div class="property-price">₺8.500.000</div>
+                </div>
+                <div class="property-details">
+                    <h3 class="property-title">Deniz Manzaralı Lüks Villa</h3>
+                    <div class="property-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Antalya, Belek</span>
+                    </div>
+                    <div class="property-features">
+                        <div class="feature">
+                            <i class="fas fa-bed"></i>
+                            <span>5+1</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-bath"></i>
+                            <span>3 Banyo</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span>450 m²</span>
+                        </div>
+                    </div>
+                    <div class="property-footer">
+                        <div class="agent-info">
+                            <div class="agent-avatar">AY</div>
+                            <span>Ahmet Yılmaz</span>
+                        </div>
+                        <button class="contact-btn">
+                            <i class="fas fa-phone"></i> İletişim
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Property Card 2 -->
+            <div class="property-card" data-category="daire">
+                <div class="property-image">
+                    <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop" alt="Daire">
+                    <div class="property-badge">Satılık</div>
+                    <div class="property-price">₺2.850.000</div>
+                </div>
+                <div class="property-details">
+                    <h3 class="property-title">Merkezi Konumda Lüks Daire</h3>
+                    <div class="property-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>İstanbul, Kadıköy</span>
+                    </div>
+                    <div class="property-features">
+                        <div class="feature">
+                            <i class="fas fa-bed"></i>
+                            <span>3+1</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-bath"></i>
+                            <span>2 Banyo</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span>165 m²</span>
+                        </div>
+                    </div>
+                    <div class="property-footer">
+                        <div class="agent-info">
+                            <div class="agent-avatar">MK</div>
+                            <span>Mehmet Kaya</span>
+                        </div>
+                        <button class="contact-btn">
+                            <i class="fas fa-phone"></i> İletişim
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Property Card 3 -->
+            <div class="property-card" data-category="villa">
+                <div class="property-image">
+                    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop" alt="Villa">
+                    <div class="property-badge featured">Öne Çıkan</div>
+                    <div class="property-price">₺12.000.000</div>
+                </div>
+                <div class="property-details">
+                    <h3 class="property-title">Havuzlu Müstakil Villa</h3>
+                    <div class="property-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>İzmir, Çeşme</span>
+                    </div>
+                    <div class="property-features">
+                        <div class="feature">
+                            <i class="fas fa-bed"></i>
+                            <span>6+2</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-bath"></i>
+                            <span>4 Banyo</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span>550 m²</span>
+                        </div>
+                    </div>
+                    <div class="property-footer">
+                        <div class="agent-info">
+                            <div class="agent-avatar">ES</div>
+                            <span>Elif Şahin</span>
+                        </div>
+                        <button class="contact-btn">
+                            <i class="fas fa-phone"></i> İletişim
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Property Card 4 -->
+            <div class="property-card" data-category="arsa">
+                <div class="property-image">
+                    <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&h=600&fit=crop" alt="Arsa">
+                    <div class="property-badge">Satılık</div>
+                    <div class="property-price">₺3.200.000</div>
+                </div>
+                <div class="property-details">
+                    <h3 class="property-title">İmarlı Satılık Arsa</h3>
+                    <div class="property-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Ankara, Çankaya</span>
+                    </div>
+                    <div class="property-features">
+                        <div class="feature">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span>1000 m²</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-certificate"></i>
+                            <span>İmarlı</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-road"></i>
+                            <span>Cadde Cepheli</span>
+                        </div>
+                    </div>
+                    <div class="property-footer">
+                        <div class="agent-info">
+                            <div class="agent-avatar">CD</div>
+                            <span>Can Demir</span>
+                        </div>
+                        <button class="contact-btn">
+                            <i class="fas fa-phone"></i> İletişim
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Property Card 5 -->
+            <div class="property-card" data-category="daire">
+                <div class="property-image">
+                    <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop" alt="Daire">
+                    <div class="property-badge">Kiralık</div>
+                    <div class="property-price">₺25.000/ay</div>
+                </div>
+                <div class="property-details">
+                    <h3 class="property-title">Eşyalı Kiralık Daire</h3>
+                    <div class="property-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>İstanbul, Beşiktaş</span>
+                    </div>
+                    <div class="property-features">
+                        <div class="feature">
+                            <i class="fas fa-bed"></i>
+                            <span>2+1</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-bath"></i>
+                            <span>1 Banyo</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span>120 m²</span>
+                        </div>
+                    </div>
+                    <div class="property-footer">
+                        <div class="agent-info">
+                            <div class="agent-avatar">ZA</div>
+                            <span>Zeynep Aydın</span>
+                        </div>
+                        <button class="contact-btn">
+                            <i class="fas fa-phone"></i> İletişim
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Property Card 6 -->
+            <div class="property-card" data-category="isyeri">
+                <div class="property-image">
+                    <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=600&fit=crop" alt="İşyeri">
+                    <div class="property-badge">Kiralık</div>
+                    <div class="property-price">₺45.000/ay</div>
+                </div>
+                <div class="property-details">
+                    <h3 class="property-title">Prestijli Ofis Katı</h3>
+                    <div class="property-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>İstanbul, Maslak</span>
+                    </div>
+                    <div class="property-features">
+                        <div class="feature">
+                            <i class="fas fa-building"></i>
+                            <span>Ofis</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-users"></i>
+                            <span>50 Kişilik</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span>300 m²</span>
+                        </div>
+                    </div>
+                    <div class="property-footer">
+                        <div class="agent-info">
+                            <div class="agent-avatar">BT</div>
+                            <span>Burak Türk</span>
+                        </div>
+                        <button class="contact-btn">
+                            <i class="fas fa-phone"></i> İletişim
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Property Card 7 -->
+            <div class="property-card" data-category="daire">
+                <div class="property-image">
+                    <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop" alt="Daire">
+                    <div class="property-badge featured">Öne Çıkan</div>
+                    <div class="property-price">₺4.750.000</div>
+                </div>
+                <div class="property-details">
+                    <h3 class="property-title">Boğaz Manzaralı Penthouse</h3>
+                    <div class="property-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>İstanbul, Sarıyer</span>
+                    </div>
+                    <div class="property-features">
+                        <div class="feature">
+                            <i class="fas fa-bed"></i>
+                            <span>4+1</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-bath"></i>
+                            <span>3 Banyo</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span>280 m²</span>
+                        </div>
+                    </div>
+                    <div class="property-footer">
+                        <div class="agent-info">
+                            <div class="agent-avatar">SO</div>
+                            <span>Selin Öztürk</span>
+                        </div>
+                        <button class="contact-btn">
+                            <i class="fas fa-phone"></i> İletişim
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Property Card 8 -->
+            <div class="property-card" data-category="arsa">
+                <div class="property-image">
+                    <img src="https://images.unsplash.com/photo-1464146072230-91cabc968266?w=800&h=600&fit=crop" alt="Arsa">
+                    <div class="property-badge">Satılık</div>
+                    <div class="property-price">₺1.850.000</div>
+                </div>
+                <div class="property-details">
+                    <h3 class="property-title">Doğa İçinde Arsa</h3>
+                    <div class="property-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Muğla, Bodrum</span>
+                    </div>
+                    <div class="property-features">
+                        <div class="feature">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span>750 m²</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-tree"></i>
+                            <span>Ağaçlık</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-water"></i>
+                            <span>Deniz 500m</span>
+                        </div>
+                    </div>
+                    <div class="property-footer">
+                        <div class="agent-info">
+                            <div class="agent-avatar">OK</div>
+                            <span>Onur Kılıç</span>
+                        </div>
+                        <button class="contact-btn">
+                            <i class="fas fa-phone"></i> İletişim
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Property Card 9 -->
+            <div class="property-card" data-category="villa">
+                <div class="property-image">
+                    <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&h=600&fit=crop" alt="Villa">
+                    <div class="property-badge">Satılık</div>
+                    <div class="property-price">₺6.900.000</div>
+                </div>
+                <div class="property-details">
+                    <h3 class="property-title">Bahçeli Triplex Villa</h3>
+                    <div class="property-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Bursa, Mudanya</span>
+                    </div>
+                    <div class="property-features">
+                        <div class="feature">
+                            <i class="fas fa-bed"></i>
+                            <span>5+2</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-bath"></i>
+                            <span>3 Banyo</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span>400 m²</span>
+                        </div>
+                    </div>
+                    <div class="property-footer">
+                        <div class="agent-info">
+                            <div class="agent-avatar">DY</div>
+                            <span>Deniz Yıldız</span>
+                        </div>
+                        <button class="contact-btn">
+                            <i class="fas fa-phone"></i> İletişim
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slider Configuration Script -->
+    <script>
+        // Slider sayısını JavaScript'e aktar
+        window.sliderCount = <?php echo count($sliders); ?>;
+    </script>
+
+<?php    require_once __DIR__."/../includes/footer.php"; ?>
