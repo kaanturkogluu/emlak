@@ -173,11 +173,21 @@ filterBtns.forEach(btn => {
 });
 
 // Search Tab Functionality
-const searchTabs = document.querySelectorAll('.search-tab');
-searchTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-        searchTabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
+document.addEventListener('DOMContentLoaded', function() {
+    const searchTabs = document.querySelectorAll('.search-tab');
+    const transactionTypeInput = document.getElementById('transaction_type');
+    
+    searchTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            searchTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            // Transaction type input'unu güncelle
+            if (transactionTypeInput) {
+                const transactionType = tab.getAttribute('data-type');
+                transactionTypeInput.value = transactionType;
+            }
+        });
     });
 });
 
@@ -245,7 +255,7 @@ vitrinImageSliders.forEach(slider => {
 });
 
 // Vitrin İlanları - Grup Kaydırma
-let currentVitrinGroup = 0;
+let mainCurrentVitrinGroup = 0;
 const vitrinSlider = document.getElementById('vitrinSlider');
 const vitrinGroups = document.querySelectorAll('.vitrin-group');
 const vitrinDots = document.querySelectorAll('.vitrin-dot');
@@ -253,17 +263,17 @@ const totalVitrinGroups = vitrinGroups.length;
 
 function showVitrinGroup(index) {
     if (index >= totalVitrinGroups) {
-        currentVitrinGroup = 0;
+        mainCurrentVitrinGroup = 0;
     } else if (index < 0) {
-        currentVitrinGroup = totalVitrinGroups - 1;
+        mainCurrentVitrinGroup = totalVitrinGroups - 1;
     } else {
-        currentVitrinGroup = index;
+        mainCurrentVitrinGroup = index;
     }
 
-    vitrinSlider.style.transform = `translateX(-${currentVitrinGroup * 100}%)`;
+    vitrinSlider.style.transform = `translateX(-${mainCurrentVitrinGroup * 100}%)`;
     
     vitrinDots.forEach((dot, i) => {
-        if (i === currentVitrinGroup) {
+        if (i === mainCurrentVitrinGroup) {
             dot.classList.add('active');
         } else {
             dot.classList.remove('active');
@@ -276,6 +286,6 @@ function goToVitrinGroup(index) {
 }
 
 setInterval(() => {
-    currentVitrinGroup++;
-    showVitrinGroup(currentVitrinGroup);
+    mainCurrentVitrinGroup++;
+    showVitrinGroup(mainCurrentVitrinGroup);
 }, 6000);

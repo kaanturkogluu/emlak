@@ -804,5 +804,55 @@ class Property {
             return 0;
         }
     }
+    
+    /**
+     * Vitrin ilanlarını getir
+     * @param int $limit
+     * @return array
+     */
+    public function getFeatured($limit = 9) {
+        try {
+            $sql = "SELECT p.*, c.name as city_name, d.name as district_name 
+                    FROM properties p 
+                    LEFT JOIN cities c ON p.city_id = c.id 
+                    LEFT JOIN districts d ON p.district_id = d.id 
+                    WHERE p.featured = 1 AND p.status = 'active'
+                    ORDER BY p.created_at DESC
+                    LIMIT :limit";
+            
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            return $stmt->fetchAll();
+        } catch (Exception $e) {
+            return [];
+        }
+    }
+    
+    /**
+     * Öne çıkan ilanları getir
+     * @param int $limit
+     * @return array
+     */
+    public function getHighlighted($limit = 12) {
+        try {
+            $sql = "SELECT p.*, c.name as city_name, d.name as district_name 
+                    FROM properties p 
+                    LEFT JOIN cities c ON p.city_id = c.id 
+                    LEFT JOIN districts d ON p.district_id = d.id 
+                    WHERE p.featured_highlighted = 1 AND p.status = 'active'
+                    ORDER BY p.created_at DESC
+                    LIMIT :limit";
+            
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            return $stmt->fetchAll();
+        } catch (Exception $e) {
+            return [];
+        }
+    }
 }
 ?>

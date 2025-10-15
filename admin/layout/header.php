@@ -521,7 +521,14 @@ $helper = Helper::getInstance();
                 <i class="fas fa-images"></i>
                 <span>Slider</span>
             </a>
-           
+            <a href="vitrin.php" class="menu-item <?php echo (basename($_SERVER['PHP_SELF']) === 'vitrin.php') ? 'active' : ''; ?>">
+                <i class="fas fa-star"></i>
+                <span>Vitrin İlanları</span>
+            </a>
+            <a href="featured-properties.php" class="menu-item <?php echo (basename($_SERVER['PHP_SELF']) === 'featured-properties.php') ? 'active' : ''; ?>">
+                <i class="fas fa-fire"></i>
+                <span>Öne Çıkan İlanlar</span>
+            </a>
             <a href="cities.php" class="menu-item <?php echo (basename($_SERVER['PHP_SELF']) === 'cities.php') ? 'active' : ''; ?>">
                 <i class="fas fa-map-marker-alt"></i>
                 <span>Şehirler</span>

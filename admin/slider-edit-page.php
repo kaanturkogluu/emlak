@@ -4,16 +4,21 @@ require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../classes/Helper.php';
 require_once __DIR__ . '/../classes/AdminUser.php';
 require_once __DIR__ . '/../classes/Slider.php';
+require_once __DIR__ . '/../classes/Property.php';
 
 $helper = Helper::getInstance();
 $adminUser = new AdminUser();
 $slider = new Slider();
+$property = new Property();
 
 $sliderId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $sliderData = null;
 $success = '';
 $error = '';
 $pageTitle = $sliderId > 0 ? 'Slider Düzenle' : 'Yeni Slider Ekle';
+
+// İlanları çek
+$properties = $property->getAll(['status' => 'active', 'limit' => 50]);
 
 // Slider verilerini getir
 if ($sliderId > 0) {
@@ -35,10 +40,6 @@ if ($_POST) {
         'status' => $_POST['status'] ?? 'active'
     ];
     
-    // Custom URL kontrolü
-    if ($data['button_url'] === 'custom' && !empty($_POST['custom_url'])) {
-        $data['button_url'] = $_POST['custom_url'];
-    }
     
     // Validation
     if (empty($data['title'])) {
@@ -152,18 +153,21 @@ require_once __DIR__ . '/layout/header.php';
                 <label for="button_url">Buton Sayfası</label>
                 <select id="button_url" name="button_url" class="form-control">
                     <option value="">Sayfa Seçin</option>
-                    <option value="<?php echo $helper->url(''); ?>" <?php echo ($sliderData && $sliderData['button_url'] === $helper->url('')) ? 'selected' : ''; ?>>Ana Sayfa</option>
-                    <option value="<?php echo $helper->url('hakkimizda'); ?>" <?php echo ($sliderData && $sliderData['button_url'] === $helper->url('hakkimizda')) ? 'selected' : ''; ?>>Hakkımızda</option>
-                    <option value="<?php echo $helper->url('iletisim'); ?>" <?php echo ($sliderData && $sliderData['button_url'] === $helper->url('iletisim')) ? 'selected' : ''; ?>>İletişim</option>
-                    <option value="<?php echo $helper->url('ilanlar'); ?>" <?php echo ($sliderData && $sliderData['button_url'] === $helper->url('ilanlar')) ? 'selected' : ''; ?>>İlanlar</option>
-                    <option value="<?php echo $helper->url('satilik'); ?>" <?php echo ($sliderData && $sliderData['button_url'] === $helper->url('satilik')) ? 'selected' : ''; ?>>Satılık</option>
-                    <option value="<?php echo $helper->url('kiralik'); ?>" <?php echo ($sliderData && $sliderData['button_url'] === $helper->url('kiralik')) ? 'selected' : ''; ?>>Kiralık</option>
-                    <option value="custom" <?php echo ($sliderData && !in_array($sliderData['button_url'], [$helper->url(''), $helper->url('hakkimizda'), $helper->url('iletisim'), $helper->url('ilanlar'), $helper->url('satilik'), $helper->url('kiralik')]) && !empty($sliderData['button_url'])) ? 'selected' : ''; ?>>Özel URL Gir</option>
+                    <option value="<?php echo $helper->getBaseUrl(); ?>" <?php echo ($sliderData && $sliderData['button_url'] === $helper->getBaseUrl()) ? 'selected' : ''; ?>>Ana Sayfa</option>
+                    <option value="<?php echo $helper->getBaseUrl() . '/hakkimizda'; ?>" <?php echo ($sliderData && $sliderData['button_url'] === $helper->getBaseUrl() . '/hakkimizda') ? 'selected' : ''; ?>>Hakkımızda</option>
+                    <option value="<?php echo $helper->getBaseUrl() . '/iletisim'; ?>" <?php echo ($sliderData && $sliderData['button_url'] === $helper->getBaseUrl() . '/iletisim') ? 'selected' : ''; ?>>İletişim</option>
+                    <option value="<?php echo $helper->getBaseUrl() . '/ilanlar'; ?>" <?php echo ($sliderData && $sliderData['button_url'] === $helper->getBaseUrl() . '/ilanlar') ? 'selected' : ''; ?>>İlanlar</option>
+                    
+                    <?php if (!empty($properties)): ?>
+                        <optgroup label="İlan Detay Sayfaları">
+                            <?php foreach ($properties as $prop): ?>
+                                <option value="<?php echo $helper->getBaseUrl() . '/ilan/' . $prop['slug']; ?>" <?php echo ($sliderData && $sliderData['button_url'] === $helper->getBaseUrl() . '/ilan/' . $prop['slug']) ? 'selected' : ''; ?>>
+                                    <?php echo $helper->e($prop['title']); ?> (<?php echo $helper->e($prop['city_name']); ?>)
+                                </option>
+                            <?php endforeach; ?>
+                        </optgroup>
+                    <?php endif; ?>
                 </select>
-                <input type="url" id="custom_url" name="custom_url" class="form-control" 
-                       style="display: none; margin-top: 10px;" 
-                       value="<?php echo ($sliderData && !in_array($sliderData['button_url'], [$helper->url(''), $helper->url('hakkimizda'), $helper->url('iletisim'), $helper->url('ilanlar'), $helper->url('satilik'), $helper->url('kiralik')]) && !empty($sliderData['button_url'])) ? $helper->e($sliderData['button_url']) : ''; ?>"
-                       placeholder="https://example.com">
             </div>
         </div>
         
@@ -315,28 +319,6 @@ require_once __DIR__ . '/layout/header.php';
 </style>
 
 <script>
-// Custom URL field toggle
-document.getElementById('button_url').addEventListener('change', function() {
-    const customUrlField = document.getElementById('custom_url');
-    if (this.value === 'custom') {
-        customUrlField.style.display = 'block';
-        customUrlField.required = true;
-    } else {
-        customUrlField.style.display = 'none';
-        customUrlField.required = false;
-    }
-});
-
-// Initialize custom URL field
-document.addEventListener('DOMContentLoaded', function() {
-    const buttonUrlSelect = document.getElementById('button_url');
-    const customUrlField = document.getElementById('custom_url');
-    
-    if (buttonUrlSelect.value === 'custom') {
-        customUrlField.style.display = 'block';
-        customUrlField.required = true;
-    }
-});
 
 // File select handler
 function handleFileSelect(input) {
