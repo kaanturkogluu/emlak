@@ -224,11 +224,8 @@ mobileMenu.addEventListener('click', () => {
     navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
 });
 
-// Search Form Handler
-document.querySelector('.search-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    alert('Arama yapılıyor... Bu örnekte backend bağlantısı yok.');
-});
+// Search Form Handler - Form artık doğrudan ilanlar sayfasına yönlendiriyor
+// JavaScript event listener kaldırıldı, form doğrudan submit oluyor
 
 // Vitrin İlanları - SLIDE VERTICAL Effect (Her 3 saniye)
 const vitrinImageSliders = document.querySelectorAll('.vitrin-image-slider');

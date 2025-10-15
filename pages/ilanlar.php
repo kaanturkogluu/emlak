@@ -192,7 +192,9 @@ $sortOptions = [
                                 $images = json_decode($prop['images'] ?? '[]', true);
                                 $mainImage = !empty($images) ? $images[0] : ($prop['main_image'] ?? 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop');
                                 ?>
-                                <img src="<?php echo $helper->e($mainImage); ?>" alt="<?php echo $helper->e($prop['title']); ?>">
+                                <a href="<?php echo $helper->propertyUrl($prop['slug']); ?>" class="image-link">
+                                    <img src="<?php echo $helper->e($mainImage); ?>" alt="<?php echo $helper->e($prop['title']); ?>">
+                                </a>
                                 <div class="property-badge"><?php echo ucfirst($helper->e($prop['transaction_type'])); ?></div>
                                 <div class="property-price"><?php echo $helper->formatPrice($prop['price']); ?></div>
                             </div>
@@ -383,6 +385,13 @@ $sortOptions = [
             position: relative;
             height: 250px;
             overflow: hidden;
+        }
+        
+        .image-link {
+            display: block;
+            width: 100%;
+            height: 100%;
+            text-decoration: none;
         }
         
         .property-image img {

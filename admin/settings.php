@@ -85,7 +85,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'linkedin_url' => $settings['linkedin_url'] ?? '',
         'youtube_url' => $settings['youtube_url'] ?? '',
         'google_analytics' => $settings['google_analytics'] ?? '',
-        'google_maps_api' => $settings['google_maps_api'] ?? ''
+        'google_maps_api' => $settings['google_maps_api'] ?? '',
+        'google_maps_iframe' => $settings['google_maps_iframe'] ?? '',
+        'maps_location_title' => $settings['maps_location_title'] ?? ''
     ];
     
     // Site ikonu varsa ekle
@@ -437,6 +439,18 @@ $currentSettings = $helper->getAllSettings();
                     <div class="form-group">
                         <label for="google_maps_api">Google Maps API Anahtarı</label>
                         <input type="text" id="google_maps_api" name="settings[google_maps_api]" value="<?php echo $helper->e($currentSettings['google_maps_api'] ?? ''); ?>" placeholder="AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="google_maps_iframe">Google Maps Iframe URL</label>
+                        <textarea id="google_maps_iframe" name="settings[google_maps_iframe]" placeholder="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3008.9633698326!2d29.0082!3d41.0431!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cab5bd657bd40f%3A0x8c9b90f577531f9b!2sBe%C5%9Fikta%C5%9F%2C%20%C4%B0stanbul!5e0!3m2!1str!2str!4v1640000000000!5m2!1str!2str"><?php echo $helper->e($currentSettings['google_maps_iframe'] ?? ''); ?></textarea>
+                        <small class="help-text">Google Maps'ten embed URL'sini kopyalayıp buraya yapıştırın</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="maps_location_title">Harita Konum Başlığı</label>
+                        <input type="text" id="maps_location_title" name="settings[maps_location_title]" value="<?php echo $helper->e($currentSettings['maps_location_title'] ?? 'Konumumuz'); ?>" placeholder="Konumumuz">
+                        <small class="help-text">İletişim sayfasındaki harita bölümünün başlığı</small>
                     </div>
                 </div>
                 

@@ -7,7 +7,6 @@ require_once __DIR__ . '/../classes/Property.php';
 require_once __DIR__ . '/../classes/Database.php';
 
 $helper = Helper::getInstance();
-$adminUser = new AdminUser();
 $property = new Property();
 $db = Database::getInstance()->getConnection();
 
@@ -29,14 +28,72 @@ if (!$currentProperty) {
     exit;
 }
 
+// Mevcut resimleri getir (JSON'dan)
+$existingImages = [];
+if (!empty($currentProperty['images'])) {
+    $existingImages = json_decode($currentProperty['images'], true) ?: [];
+}
+
 // Şehir ve ilçe listeleri
 $cities = $db->query("SELECT * FROM cities ORDER BY name")->fetchAll();
 $districts = $db->prepare("SELECT * FROM districts WHERE city_id = ? ORDER BY name");
 $districts->execute([$currentProperty['city_id']]);
 $districts = $districts->fetchAll();
 
+// Resim silme işlemi
+if (isset($_POST['delete_image_index'])) {
+    $deleteIndex = (int)$_POST['delete_image_index'];
+    if ($deleteIndex >= 0 && $deleteIndex < count($existingImages)) {
+        // Resmi diziden kaldır
+        unset($existingImages[$deleteIndex]);
+        $existingImages = array_values($existingImages); // Index'leri yeniden düzenle
+        
+        // Ana resim silinmişse, yeni ana resim belirle
+        $newMainImage = !empty($existingImages) ? $existingImages[0] : null;
+        
+        // Veritabanını güncelle
+        $updateData = [
+            'images' => json_encode($existingImages),
+            'main_image' => $newMainImage
+        ];
+        
+        if ($property->update($id, $updateData)) {
+            $success = 'Resim başarıyla silindi!';
+            $currentProperty = $property->getById($id);
+        } else {
+            $error = 'Resim silinirken bir hata oluştu!';
+        }
+    }
+}
+
 // Form işleme
-if ($_POST) {
+if ($_POST && !isset($_POST['delete_image_index'])) {
+    // Önce resim yükleme işlemini yap
+    $uploadedImages = [];
+    if (!empty($_FILES['images']['name'][0])) {
+        $uploadDir = __DIR__ . '/../uploads/properties/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+        
+        foreach ($_FILES['images']['name'] as $key => $filename) {
+            if ($_FILES['images']['error'][$key] === UPLOAD_ERR_OK) {
+                $fileExtension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+                $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+                
+                if (in_array($fileExtension, $allowedExtensions)) {
+                    $newFilename = 'property_' . time() . '_' . $key . '_' . uniqid() . '.' . $fileExtension;
+                    $uploadPath = $uploadDir . $newFilename;
+                    
+                    if (move_uploaded_file($_FILES['images']['tmp_name'][$key], $uploadPath)) {
+                        $uploadedImages[] = $helper->getBaseUrl() . '/uploads/properties/' . $newFilename;
+                    }
+                }
+            }
+        }
+    }
+    
+    // Form verilerini al
     $data = [
         'title' => $_POST['title'] ?? '',
         'description' => $_POST['description'] ?? '',
@@ -61,7 +118,7 @@ if ($_POST) {
         'status' => $_POST['status'] ?? 'active'
     ];
     
-    // Validation
+    // Validation - sadece kritik alanlar
     if (empty($data['title'])) {
         $error = 'Başlık alanı zorunludur!';
     } elseif (empty($data['property_type'])) {
@@ -72,62 +129,30 @@ if ($_POST) {
         $error = 'Geçerli bir fiyat giriniz!';
     } elseif ($data['city_id'] <= 0) {
         $error = 'Şehir seçimi zorunludur!';
-    } elseif ($data['district_id'] <= 0) {
-        $error = 'İlçe seçimi zorunludur!';
+    }
+    // district_id kontrolünü kaldırdık - opsiyonel olabilir
+    
+    // Resimleri birleştir
+    $allImages = $existingImages;
+    if (!empty($uploadedImages)) {
+        $allImages = array_merge($allImages, $uploadedImages);
+        $data['main_image'] = $uploadedImages[0]; // Yeni ana resim
+    }
+    
+    // Resimleri JSON olarak kaydet
+    $data['images'] = json_encode($allImages);
+    
+    // İlan güncelleme
+    if ($property->update($id, $data)) {
+        $success = 'İlan başarıyla güncellendi!';
+        // Güncellenmiş bilgileri tekrar getir
+        $currentProperty = $property->getById($id);
+        // Mevcut resimleri güncelle
+        $existingImages = $allImages;
     } else {
-        // Resim yükleme
-        $uploadedImages = [];
-        if (!empty($_FILES['images']['name'][0])) {
-            $uploadDir = __DIR__ . '/../uploads/properties/';
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
-            }
-            
-            foreach ($_FILES['images']['name'] as $key => $filename) {
-                if ($_FILES['images']['error'][$key] === UPLOAD_ERR_OK) {
-                    $fileExtension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-                    $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
-                    
-                    if (in_array($fileExtension, $allowedExtensions)) {
-                        $newFilename = 'property_' . time() . '_' . $key . '_' . uniqid() . '.' . $fileExtension;
-                        $uploadPath = $uploadDir . $newFilename;
-                        
-                        if (move_uploaded_file($_FILES['images']['tmp_name'][$key], $uploadPath)) {
-                            $uploadedImages[] = $helper->getBaseUrl() . '/uploads/properties/' . $newFilename;
-                        }
-                    }
-                }
-            }
-        }
-        
-        // Ana resim belirleme
-        if (!empty($uploadedImages)) {
-            $data['main_image'] = $uploadedImages[0];
-        }
-        
-        // İlan güncelleme
-        if ($property->update($id, $data)) {
-            // Yeni resimler varsa ekle
-            if (!empty($uploadedImages)) {
-                foreach ($uploadedImages as $imageUrl) {
-                    $db->prepare("INSERT INTO property_images (property_id, image_url) VALUES (?, ?)")
-                       ->execute([$id, $imageUrl]);
-                }
-            }
-            
-            $success = 'İlan başarıyla güncellendi!';
-            // Güncellenmiş bilgileri tekrar getir
-            $currentProperty = $property->getById($id);
-        } else {
-            $error = 'İlan güncellenirken bir hata oluştu!';
-        }
+        $error = 'İlan güncellenirken bir hata oluştu!';
     }
 }
-
-// Mevcut resimleri getir
-$existingImages = $db->prepare("SELECT * FROM property_images WHERE property_id = ? ORDER BY id");
-$existingImages->execute([$id]);
-$existingImages = $existingImages->fetchAll();
 
 // Admin layout header
 require_once __DIR__ . '/layout/header.php';
@@ -340,11 +365,11 @@ require_once __DIR__ . '/layout/header.php';
                     <div class="existing-images">
                         <h4>Mevcut Resimler</h4>
                         <div class="image-grid">
-                            <?php foreach ($existingImages as $image): ?>
+                            <?php foreach ($existingImages as $index => $imageUrl): ?>
                                 <div class="image-item">
-                                    <img src="<?php echo $helper->e($image['image_url']); ?>" alt="İlan Resmi">
+                                    <img src="<?php echo $helper->e($imageUrl); ?>" alt="İlan Resmi">
                                     <div class="image-actions">
-                                        <button type="button" class="btn-delete" onclick="deleteImage(<?php echo $image['id']; ?>)">
+                                        <button type="button" class="btn-delete" onclick="deleteImage(<?php echo $index; ?>)">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
@@ -434,30 +459,262 @@ function loadDistricts(cityId) {
         });
 }
 
-function deleteImage(imageId) {
+function deleteImage(imageIndex) {
     if (confirm('Bu resmi silmek istediğinizden emin misiniz?')) {
-        fetch('/emlak/api/delete-image.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({image_id: imageId})
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            } else {
-                alert('Resim silinirken bir hata oluştu: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Hata:', error);
-            alert('Resim silinirken bir hata oluştu.');
-        });
+        // Mevcut resimlerden belirtilen index'i kaldır
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '';
+        
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'delete_image_index';
+        input.value = imageIndex;
+        
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
     }
 }
 </script>
+
+<style>
+/* Property Edit Sayfası Özel CSS */
+.form-container {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 30px;
+    margin: 20px 0;
+}
+
+.property-form {
+    max-width: 100%;
+}
+
+.form-section {
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.form-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.form-section h3 {
+    color: #495057;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #007bff;
+    display: inline-block;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+.form-group small {
+    display: block;
+    margin-top: 5px;
+    color: #6c757d;
+    font-size: 12px;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+    transform: scale(1.2);
+}
+
+/* Resim Yönetimi */
+.existing-images {
+    margin-bottom: 30px;
+}
+
+.existing-images h4 {
+    color: #495057;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.image-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.image-item:hover {
+    transform: translateY(-2px);
+}
+
+.image-item img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    display: block;
+}
+
+.image-actions {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.btn-delete {
+    background: rgba(220, 53, 69, 0.9);
+    border: none;
+    color: white;
+    padding: 5px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.3s ease;
+}
+
+.btn-delete:hover {
+    background: rgba(220, 53, 69, 1);
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-start;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #545b62;
+    transform: translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .image-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 10px;
+    }
+    
+    .form-container {
+        padding: 20px;
+        margin: 10px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-container {
+        padding: 15px;
+    }
+    
+    .form-section h3 {
+        font-size: 1.1rem;
+    }
+    
+    .image-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+}
+</style>
 
 <?php
 // Admin layout footer

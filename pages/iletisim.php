@@ -1,34 +1,9 @@
-<?php
-require_once __DIR__ . '/../config/config.php';
-require_once __DIR__ . '/../classes/Helper.php';
+<?php 
+require_once __DIR__."/../includes/header.php";
+require_once __DIR__."/../classes/Helper.php";
 
 $helper = Helper::getInstance();
-
-// Meta bilgileri
-$pageTitle = 'İletişim - ' . (defined('SITE_NAME') ? SITE_NAME : 'Emlak Sitesi');
-$pageDescription = 'Bizimle iletişime geçin. Emlak danışmanlığı, ilan yayınlama ve diğer hizmetlerimiz hakkında bilgi alın.';
 ?>
-
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $helper->e($pageTitle); ?></title>
-    <meta name="description" content="<?php echo $helper->e($pageDescription); ?>">
-    
-    <!-- Open Graph -->
-    <meta property="og:title" content="<?php echo $helper->e($pageTitle); ?>">
-    <meta property="og:description" content="<?php echo $helper->e($pageDescription); ?>">
-    <meta property="og:url" content="<?php echo $helper->getBaseUrl(); ?>/iletisim">
-    <meta property="og:type" content="website">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="<?php echo $helper->getBaseUrl(); ?>/assets/images/favicon.ico">
-    
-    <!-- CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="<?php echo $helper->getBaseUrl(); ?>/assets/css/style.css">
     
     <style>
         .contact-page {
@@ -184,10 +159,8 @@ $pageDescription = 'Bizimle iletişime geçin. Emlak danışmanlığı, ilan yay
         }
     </style>
 </head>
+
 <body>
-    <!-- Header -->
-    <?php include __DIR__ . '/../includes/header.php'; ?>
-    
     <div class="contact-page">
         <!-- Page Header -->
         <div class="page-header">
@@ -234,17 +207,20 @@ $pageDescription = 'Bizimle iletişime geçin. Emlak danışmanlığı, ilan yay
                 </div>
                 
                 <div class="social-links">
-                    <a href="#" class="social-link" aria-label="Facebook">
+                    <a href="<?php echo $helper->getSetting('facebook_url', '#'); ?>" class="social-link" aria-label="Facebook">
                         <i class="fab fa-facebook-f"></i>
                     </a>
-                    <a href="#" class="social-link" aria-label="Twitter">
+                    <a href="<?php echo $helper->getSetting('twitter_url', '#'); ?>" class="social-link" aria-label="Twitter">
                         <i class="fab fa-twitter"></i>
                     </a>
-                    <a href="#" class="social-link" aria-label="Instagram">
+                    <a href="<?php echo $helper->getSetting('instagram_url', '#'); ?>" class="social-link" aria-label="Instagram">
                         <i class="fab fa-instagram"></i>
                     </a>
-                    <a href="#" class="social-link" aria-label="LinkedIn">
+                    <a href="<?php echo $helper->getSetting('linkedin_url', '#'); ?>" class="social-link" aria-label="LinkedIn">
                         <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="<?php echo $helper->getSetting('youtube_url', '#'); ?>" class="social-link" aria-label="YouTube">
+                        <i class="fab fa-youtube"></i>
                     </a>
                 </div>
             </div>
@@ -289,10 +265,14 @@ $pageDescription = 'Bizimle iletişime geçin. Emlak danışmanlığı, ilan yay
         
         <!-- Map Section -->
         <div class="map-section">
-            <h3>Konumumuz</h3>
+            <?php 
+            $mapsIframeUrl = $helper->getSetting('google_maps_iframe', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3008.9633698326!2d29.0082!3d41.0431!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cab5bd657bd40f%3A0x8c9b90f577531f9b!2sBe%C5%9Fikta%C5%9F%2C%20%C4%B0stanbul!5e0!3m2!1str!2str!4v1640000000000!5m2!1str!2str');
+            $mapsLocationTitle = $helper->getSetting('maps_location_title', 'Konumumuz');
+            ?>
+            <h3><?php echo $helper->e($mapsLocationTitle); ?></h3>
             <div class="map-container">
                 <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3008.9633698326!2d29.0082!3d41.0431!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cab5bd657bd40f%3A0x8c9b90f577531f9b!2sBe%C5%9Fikta%C5%9F%2C%20%C4%B0stanbul!5e0!3m2!1str!2str!4v1640000000000!5m2!1str!2str" 
+                    src="<?php echo $helper->e($mapsIframeUrl); ?>" 
                     width="100%" 
                     height="400" 
                     style="border:0; border-radius: 10px;" 
@@ -304,8 +284,4 @@ $pageDescription = 'Bizimle iletişime geçin. Emlak danışmanlığı, ilan yay
         </div>
     </div>
     
-    <!-- Footer -->
     <?php include __DIR__ . '/../includes/footer.php'; ?>
-    
-</body>
-</html>

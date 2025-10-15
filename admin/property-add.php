@@ -173,6 +173,7 @@ require_once __DIR__ . '/layout/header.php';
                     <option value="arsa" <?php echo (isset($_POST['property_type']) && $_POST['property_type'] === 'arsa') ? 'selected' : ''; ?>>Arsa</option>
                     <option value="isyeri" <?php echo (isset($_POST['property_type']) && $_POST['property_type'] === 'isyeri') ? 'selected' : ''; ?>>İşyeri</option>
                     <option value="ofis" <?php echo (isset($_POST['property_type']) && $_POST['property_type'] === 'ofis') ? 'selected' : ''; ?>>Ofis</option>
+                    <option value="depo" <?php echo (isset($_POST['property_type']) && $_POST['property_type'] === 'depo') ? 'selected' : ''; ?>>Depo</option>
                 </select>
             </div>
             
@@ -182,7 +183,7 @@ require_once __DIR__ . '/layout/header.php';
                     <option value="">Seçiniz</option>
                     <option value="satilik" <?php echo (isset($_POST['transaction_type']) && $_POST['transaction_type'] === 'satilik') ? 'selected' : ''; ?>>Satılık</option>
                     <option value="kiralik" <?php echo (isset($_POST['transaction_type']) && $_POST['transaction_type'] === 'kiralik') ? 'selected' : ''; ?>>Kiralık</option>
-                    <option value="gunluk_kiralik" <?php echo (isset($_POST['transaction_type']) && $_POST['transaction_type'] === 'gunluk_kiralik') ? 'selected' : ''; ?>>Günlük Kiralık</option>
+                    <option value="gunluk-kiralik" <?php echo (isset($_POST['transaction_type']) && $_POST['transaction_type'] === 'gunluk-kiralik') ? 'selected' : ''; ?>>Günlük Kiralık</option>
                 </select>
             </div>
         </div>

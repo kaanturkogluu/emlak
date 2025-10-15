@@ -2,9 +2,16 @@
 
 require_once __DIR__."/../includes/header.php";
 require_once __DIR__."/../classes/Slider.php";
+require_once __DIR__."/../classes/Database.php";
 
 $slider = new Slider();
 $sliders = $slider->getActive();
+
+// Şehirleri veritabanından al
+$db = Database::getInstance();
+$stmt = $db->getConnection()->prepare("SELECT * FROM cities WHERE status = 'active' ORDER BY name ASC");
+$stmt->execute();
+$cities = $stmt->fetchAll();
 
 ?>
 
@@ -58,28 +65,33 @@ $sliders = $slider->getActive();
     <!-- Search Section -->
     <div class="search-section">
         <div class="search-tabs">
-            <button class="search-tab active">Satılık</button>
-            <button class="search-tab">Kiralık</button>
-            <button class="search-tab">Günlük Kiralık</button>
+            <button type="button" class="search-tab active" data-type="satilik">Satılık</button>
+            <button type="button" class="search-tab" data-type="kiralik">Kiralık</button>
+            <button type="button" class="search-tab" data-type="gunluk-kiralik">Günlük Kiralık</button>
         </div>
-        <form class="search-form">
-            <select class="search-input">
-                <option>Tüm İl</option>
-                <option>İstanbul</option>
-                <option>Ankara</option>
-                <option>İzmir</option>
-                <option>Antalya</option>
-                <option>Bursa</option>
+        <form class="search-form" action="<?php echo $helper->url('ilanlar'); ?>" method="GET">
+            <input type="hidden" name="transaction_type" id="transaction_type" value="satilik">
+            
+            <select name="city" class="search-input">
+                <option value="">Tüm İl</option>
+                <?php foreach ($cities as $city): ?>
+                    <option value="<?php echo $helper->e($city['name']); ?>"><?php echo $helper->e($city['name']); ?></option>
+                <?php endforeach; ?>
             </select>
-            <select class="search-input">
-                <option>Emlak Tipi</option>
-                <option>Daire</option>
-                <option>Villa</option>
-                <option>Arsa</option>
-                <option>İşyeri</option>
+            
+            <select name="property_type" class="search-input">
+                <option value="">Emlak Tipi</option>
+                <option value="daire">Daire</option>
+                <option value="villa">Villa</option>
+                <option value="arsa">Arsa</option>
+                <option value="isyeri">İşyeri</option>
+                <option value="ofis">Ofis</option>
+                <option value="depo">Depo</option>
             </select>
-            <input type="number" class="search-input" placeholder="Min Fiyat">
-            <input type="number" class="search-input" placeholder="Max Fiyat">
+            
+            <input type="number" name="min_price" class="search-input" placeholder="Min Fiyat">
+            <input type="number" name="max_price" class="search-input" placeholder="Max Fiyat">
+            
             <button type="submit" class="btn" style="width: 100%;">
                 <i class="fas fa-search"></i> Ara
             </button>
@@ -632,6 +644,34 @@ $sliders = $slider->getActive();
     <script>
         // Slider sayısını JavaScript'e aktar
         window.sliderCount = <?php echo count($sliders); ?>;
+        
+        // Search tabs functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchTabs = document.querySelectorAll('.search-tab');
+            const transactionTypeInput = document.getElementById('transaction_type');
+            
+            searchTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    searchTabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Update hidden input value
+                    transactionTypeInput.value = this.getAttribute('data-type');
+                });
+            });
+            
+            // Search form submit - doğrudan gönder, engelleme
+            const searchForm = document.querySelector('.search-form');
+            if (searchForm) {
+                searchForm.addEventListener('submit', function(e) {
+                    // Form'u engelleme, doğrudan gönder
+                    // e.preventDefault(); // Bu satırı kaldırdık
+                });
+            }
+        });
     </script>
 
 <?php    require_once __DIR__."/../includes/footer.php"; ?>

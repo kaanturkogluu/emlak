@@ -266,6 +266,15 @@ $similarProperties = $property->getSimilar($ilan['id'], $ilan['property_type'], 
             transform: translateY(-5px);
         }
         
+        .property-card a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .property-card a:hover {
+            text-decoration: none;
+        }
+        
         .property-card-image {
             width: 100%;
             height: 200px;

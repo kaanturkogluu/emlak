@@ -107,7 +107,7 @@ $helper = Helper::getInstance();
                             <div class="dropdown-menu">
                                 <a href="<?php echo $helper->url('hakkimizda'); ?>"><i class="fas fa-info-circle"></i> Hakkımızda</a>
                                 <a href="<?php echo $helper->url('iletisim'); ?>"><i class="fas fa-envelope"></i> İletişim</a>
-                                <a href="<?php echo $helper->url('gizlilik'); ?>"><i class="fas fa-shield-alt"></i> Gizlilik Politikası</a>
+                                <a href="<?php echo $helper->url('gizlilik-politikasi'); ?>"><i class="fas fa-shield-alt"></i> Gizlilik Politikası</a>
                                 <a href="<?php echo $helper->url('kullanim-kosullari'); ?>"><i class="fas fa-file-contract"></i> Kullanım Koşulları</a>
                             </div>
                         </li>
