@@ -6,8 +6,8 @@ $property = new Property();
 
 // Filtreler
 $filters = [
-    'type' => $_GET['type'] ?? '',
-    'category' => $_GET['category'] ?? '',
+    'transaction_type' => $_GET['transaction_type'] ?? $_GET['type'] ?? '', // Navbar'dan gelen transaction_type
+    'property_type' => $_GET['property_type'] ?? $_GET['category'] ?? '', // Navbar'dan gelen property_type
     'city' => $_GET['city'] ?? '',
     'district' => $_GET['district'] ?? '',
     'min_price' => $_GET['min_price'] ?? '',
@@ -62,7 +62,28 @@ $sortOptions = [
     <section class="page-header">
         <div class="container">
             <div class="page-header-content">
-                <h1>İlanlar</h1>
+                <h1>
+                    <?php 
+                    $title = 'İlanlar';
+                    if (!empty($filters['transaction_type'])) {
+                        $transactionType = $filters['transaction_type'];
+                        if ($transactionType === 'gunluk-kiralik') {
+                            $title = 'Günlük Kiralık İlanlar';
+                        } else {
+                            $title = ucfirst($transactionType) . ' İlanlar';
+                        }
+                    }
+                    if (!empty($filters['property_type'])) {
+                        $transactionType = $filters['transaction_type'];
+                        if ($transactionType === 'gunluk-kiralik') {
+                            $title = 'Günlük Kiralık ' . ucfirst($filters['property_type']);
+                        } else {
+                            $title = ucfirst($transactionType) . ' ' . ucfirst($filters['property_type']);
+                        }
+                    }
+                    echo $title;
+                    ?>
+                </h1>
                 <p><?php echo $totalProperties; ?> ilan bulundu</p>
             </div>
         </div>
@@ -74,20 +95,21 @@ $sortOptions = [
             <form method="GET" class="filters-form">
                 <div class="filter-row">
                     <div class="filter-group">
-                        <label for="type">İlan Tipi</label>
-                        <select id="type" name="type" class="filter-select">
+                        <label for="transaction_type">İlan Tipi</label>
+                        <select id="transaction_type" name="transaction_type" class="filter-select">
                             <option value="">Tümü</option>
-                            <option value="satilik" <?php echo $filters['type'] === 'satilik' ? 'selected' : ''; ?>>Satılık</option>
-                            <option value="kiralik" <?php echo $filters['type'] === 'kiralik' ? 'selected' : ''; ?>>Kiralık</option>
+                            <option value="satilik" <?php echo $filters['transaction_type'] === 'satilik' ? 'selected' : ''; ?>>Satılık</option>
+                            <option value="kiralik" <?php echo $filters['transaction_type'] === 'kiralik' ? 'selected' : ''; ?>>Kiralık</option>
+                            <option value="gunluk-kiralik" <?php echo $filters['transaction_type'] === 'gunluk-kiralik' ? 'selected' : ''; ?>>Günlük Kiralık</option>
                         </select>
                     </div>
                     
                     <div class="filter-group">
-                        <label for="category">Kategori</label>
-                        <select id="category" name="category" class="filter-select">
+                        <label for="property_type">Kategori</label>
+                        <select id="property_type" name="property_type" class="filter-select">
                             <option value="">Tümü</option>
                             <?php foreach ($categories as $key => $label): ?>
-                                <option value="<?php echo $key; ?>" <?php echo $filters['category'] === $key ? 'selected' : ''; ?>><?php echo $label; ?></option>
+                                <option value="<?php echo $key; ?>" <?php echo $filters['property_type'] === $key ? 'selected' : ''; ?>><?php echo $label; ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

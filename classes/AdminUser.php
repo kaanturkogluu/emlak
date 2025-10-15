@@ -238,5 +238,13 @@ class AdminUser {
             return false;
         }
     }
+    
+    /**
+     * Admin kullanıcısının giriş yapıp yapmadığını kontrol et
+     * @return bool
+     */
+    public function isLoggedIn() {
+        return isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true;
+    }
 }
 ?>

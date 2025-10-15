@@ -20,6 +20,63 @@ class Helper {
     }
     
     /**
+     * Site adını getirir
+     * @return string
+     */
+    public function getSiteName() {
+        return $this->getSetting('site_name', 'Emlak Sitesi');
+    }
+    
+    /**
+     * Site ayarını getirir
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getSetting($key, $default = null) {
+        static $siteSettings = null;
+        
+        if ($siteSettings === null) {
+            require_once __DIR__ . '/SiteSettings.php';
+            $siteSettings = new SiteSettings();
+        }
+        
+        return $siteSettings->get($key, $default);
+    }
+    
+    /**
+     * Site ayarını set eder
+     * @param string $key
+     * @param mixed $value
+     * @return bool
+     */
+    public function setSetting($key, $value) {
+        static $siteSettings = null;
+        
+        if ($siteSettings === null) {
+            require_once __DIR__ . '/SiteSettings.php';
+            $siteSettings = new SiteSettings();
+        }
+        
+        return $siteSettings->set($key, $value);
+    }
+    
+    /**
+     * Tüm site ayarlarını getirir
+     * @return array
+     */
+    public function getAllSettings() {
+        static $siteSettings = null;
+        
+        if ($siteSettings === null) {
+            require_once __DIR__ . '/SiteSettings.php';
+            $siteSettings = new SiteSettings();
+        }
+        
+        return $siteSettings->getAll();
+    }
+    
+    /**
      * SEO dostu URL oluşturur
      * @param string $page - Sayfa adı (örn: 'ilanlar', 'hakkimizda')
      * @param array $params - URL parametreleri

@@ -22,6 +22,16 @@ $helper = Helper::getInstance();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($pageTitle) ? $pageTitle . ' - ' : ''; ?>Admin Panel</title>
+    
+    <!-- Favicon -->
+    <?php $siteIcon = $helper->getSetting('site_icon', ''); ?>
+    <?php if (!empty($siteIcon)): ?>
+        <link rel="icon" type="image/x-icon" href="<?php echo $helper->e($siteIcon); ?>">
+        <link rel="shortcut icon" type="image/x-icon" href="<?php echo $helper->e($siteIcon); ?>">
+        <link rel="apple-touch-icon" href="<?php echo $helper->e($siteIcon); ?>">
+        <meta name="msapplication-TileImage" content="<?php echo $helper->e($siteIcon); ?>">
+    <?php endif; ?>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -511,10 +521,7 @@ $helper = Helper::getInstance();
                 <i class="fas fa-images"></i>
                 <span>Slider</span>
             </a>
-            <a href="users.php" class="menu-item <?php echo (basename($_SERVER['PHP_SELF']) === 'users.php') ? 'active' : ''; ?>">
-                <i class="fas fa-users"></i>
-                <span>Kullanıcılar</span>
-            </a>
+           
             <a href="cities.php" class="menu-item <?php echo (basename($_SERVER['PHP_SELF']) === 'cities.php') ? 'active' : ''; ?>">
                 <i class="fas fa-map-marker-alt"></i>
                 <span>Şehirler</span>

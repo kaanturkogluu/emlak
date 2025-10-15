@@ -25,12 +25,18 @@ class Property {
             $params = [];
             
             // Filtreler
-            if (!empty($filters['type'])) {
+            if (!empty($filters['transaction_type'])) {
+                $sql .= " AND p.transaction_type = :transaction_type";
+                $params['transaction_type'] = $filters['transaction_type'];
+            } elseif (!empty($filters['type'])) {
                 $sql .= " AND p.transaction_type = :type";
                 $params['type'] = $filters['type'];
             }
             
-            if (!empty($filters['category'])) {
+            if (!empty($filters['property_type'])) {
+                $sql .= " AND p.property_type = :property_type";
+                $params['property_type'] = $filters['property_type'];
+            } elseif (!empty($filters['category'])) {
                 $sql .= " AND p.property_type = :category";
                 $params['category'] = $filters['category'];
             }
@@ -112,47 +118,56 @@ class Property {
      */
     public function getCount($filters = []) {
         try {
-            $sql = "SELECT COUNT(*) FROM properties WHERE 1=1";
+            $sql = "SELECT COUNT(*) FROM properties p 
+                    LEFT JOIN cities c ON p.city_id = c.id 
+                    LEFT JOIN districts d ON p.district_id = d.id 
+                    WHERE 1=1";
             $params = [];
             
             // Filtreler (getAll ile aynı)
-            if (!empty($filters['type'])) {
-                $sql .= " AND type = :type";
+            if (!empty($filters['transaction_type'])) {
+                $sql .= " AND p.transaction_type = :transaction_type";
+                $params['transaction_type'] = $filters['transaction_type'];
+            } elseif (!empty($filters['type'])) {
+                $sql .= " AND p.transaction_type = :type";
                 $params['type'] = $filters['type'];
             }
             
-            if (!empty($filters['category'])) {
-                $sql .= " AND category = :category";
+            if (!empty($filters['property_type'])) {
+                $sql .= " AND p.property_type = :property_type";
+                $params['property_type'] = $filters['property_type'];
+            } elseif (!empty($filters['category'])) {
+                $sql .= " AND p.property_type = :category";
                 $params['category'] = $filters['category'];
             }
             
             if (!empty($filters['city'])) {
-                $sql .= " AND city = :city";
+                $sql .= " AND c.name = :city";
                 $params['city'] = $filters['city'];
             }
             
             if (!empty($filters['district'])) {
-                $sql .= " AND district = :district";
+                $sql .= " AND d.name = :district";
                 $params['district'] = $filters['district'];
             }
             
             if (!empty($filters['min_price'])) {
-                $sql .= " AND price >= :min_price";
+                $sql .= " AND p.price >= :min_price";
                 $params['min_price'] = $filters['min_price'];
             }
             
             if (!empty($filters['max_price'])) {
-                $sql .= " AND price <= :max_price";
+                $sql .= " AND p.price <= :max_price";
                 $params['max_price'] = $filters['max_price'];
             }
             
             if (!empty($filters['rooms'])) {
-                $sql .= " AND rooms = :rooms";
+                $sql .= " AND p.room_count = :rooms";
                 $params['rooms'] = $filters['rooms'];
             }
             
             if (!empty($filters['status'])) {
-                $sql .= " AND status = :status";
+                $sql .= " AND p.status = :status";
                 $params['status'] = $filters['status'];
             }
             
@@ -521,6 +536,272 @@ class Property {
             return $stmt->fetchAll();
         } catch (Exception $e) {
             return [];
+        }
+    }
+    
+    /**
+     * Gelişmiş arama
+     * @param array $filters
+     * @return array
+     */
+    public function search($filters = []) {
+        try {
+            $sql = "SELECT p.*, c.name as city_name, d.name as district_name 
+                    FROM properties p 
+                    LEFT JOIN cities c ON p.city_id = c.id 
+                    LEFT JOIN districts d ON p.district_id = d.id 
+                    WHERE 1=1";
+            $params = [];
+            
+            // Anahtar kelime araması
+            if (!empty($filters['keyword'])) {
+                $sql .= " AND (p.title LIKE :keyword OR p.description LIKE :keyword OR p.address LIKE :keyword)";
+                $params['keyword'] = '%' . $filters['keyword'] . '%';
+            }
+            
+            // İlan tipi
+            if (!empty($filters['transaction_type'])) {
+                $sql .= " AND p.transaction_type = :transaction_type";
+                $params['transaction_type'] = $filters['transaction_type'];
+            }
+            
+            // Emlak tipi
+            if (!empty($filters['property_type'])) {
+                $sql .= " AND p.property_type = :property_type";
+                $params['property_type'] = $filters['property_type'];
+            }
+            
+            // Şehir
+            if (!empty($filters['city'])) {
+                $sql .= " AND c.name = :city";
+                $params['city'] = $filters['city'];
+            }
+            
+            // İlçe
+            if (!empty($filters['district'])) {
+                $sql .= " AND d.name = :district";
+                $params['district'] = $filters['district'];
+            }
+            
+            // Fiyat aralığı
+            if (!empty($filters['min_price'])) {
+                $sql .= " AND p.price >= :min_price";
+                $params['min_price'] = $filters['min_price'];
+            }
+            
+            if (!empty($filters['max_price'])) {
+                $sql .= " AND p.price <= :max_price";
+                $params['max_price'] = $filters['max_price'];
+            }
+            
+            // Alan aralığı
+            if (!empty($filters['min_area'])) {
+                $sql .= " AND p.area >= :min_area";
+                $params['min_area'] = $filters['min_area'];
+            }
+            
+            if (!empty($filters['max_area'])) {
+                $sql .= " AND p.area <= :max_area";
+                $params['max_area'] = $filters['max_area'];
+            }
+            
+            // Oda sayısı
+            if (!empty($filters['rooms'])) {
+                $sql .= " AND p.room_count = :rooms";
+                $params['rooms'] = $filters['rooms'];
+            }
+            
+            // Banyo sayısı
+            if (!empty($filters['bathrooms'])) {
+                $sql .= " AND p.bathroom_count = :bathrooms";
+                $params['bathrooms'] = $filters['bathrooms'];
+            }
+            
+            // Kat
+            if (!empty($filters['floor'])) {
+                $sql .= " AND p.floor = :floor";
+                $params['floor'] = $filters['floor'];
+            }
+            
+            // Isıtma türü
+            if (!empty($filters['heating_type'])) {
+                $sql .= " AND p.heating_type = :heating_type";
+                $params['heating_type'] = $filters['heating_type'];
+            }
+            
+            // Bina yaşı
+            if (!empty($filters['building_age'])) {
+                switch ($filters['building_age']) {
+                    case '0-5':
+                        $sql .= " AND p.building_age <= 5";
+                        break;
+                    case '5-10':
+                        $sql .= " AND p.building_age > 5 AND p.building_age <= 10";
+                        break;
+                    case '10-20':
+                        $sql .= " AND p.building_age > 10 AND p.building_age <= 20";
+                        break;
+                    case '20+':
+                        $sql .= " AND p.building_age > 20";
+                        break;
+                }
+            }
+            
+            // Durum
+            if (!empty($filters['status'])) {
+                $sql .= " AND p.status = :status";
+                $params['status'] = $filters['status'];
+            }
+            
+            // Sıralama
+            $orderBy = $filters['order_by'] ?? 'created_at';
+            $orderDir = $filters['order_dir'] ?? 'DESC';
+            
+            if ($orderBy === 'price_desc') {
+                $sql .= " ORDER BY p.price DESC";
+            } elseif ($orderBy === 'area_desc') {
+                $sql .= " ORDER BY p.area DESC";
+            } else {
+                $sql .= " ORDER BY p.{$orderBy} {$orderDir}";
+            }
+            
+            // Sayfalama
+            if (!empty($filters['limit'])) {
+                $sql .= " LIMIT :limit";
+                $params['limit'] = (int)$filters['limit'];
+                
+                if (!empty($filters['offset'])) {
+                    $sql .= " OFFSET :offset";
+                    $params['offset'] = (int)$filters['offset'];
+                }
+            }
+            
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetchAll();
+        } catch (Exception $e) {
+            return [];
+        }
+    }
+    
+    /**
+     * Arama sonuç sayısını getir
+     * @param array $filters
+     * @return int
+     */
+    public function getSearchCount($filters = []) {
+        try {
+            $sql = "SELECT COUNT(*) FROM properties p 
+                    LEFT JOIN cities c ON p.city_id = c.id 
+                    LEFT JOIN districts d ON p.district_id = d.id 
+                    WHERE 1=1";
+            $params = [];
+            
+            // Anahtar kelime araması
+            if (!empty($filters['keyword'])) {
+                $sql .= " AND (p.title LIKE :keyword OR p.description LIKE :keyword OR p.address LIKE :keyword)";
+                $params['keyword'] = '%' . $filters['keyword'] . '%';
+            }
+            
+            // İlan tipi
+            if (!empty($filters['transaction_type'])) {
+                $sql .= " AND p.transaction_type = :transaction_type";
+                $params['transaction_type'] = $filters['transaction_type'];
+            }
+            
+            // Emlak tipi
+            if (!empty($filters['property_type'])) {
+                $sql .= " AND p.property_type = :property_type";
+                $params['property_type'] = $filters['property_type'];
+            }
+            
+            // Şehir
+            if (!empty($filters['city'])) {
+                $sql .= " AND c.name = :city";
+                $params['city'] = $filters['city'];
+            }
+            
+            // İlçe
+            if (!empty($filters['district'])) {
+                $sql .= " AND d.name = :district";
+                $params['district'] = $filters['district'];
+            }
+            
+            // Fiyat aralığı
+            if (!empty($filters['min_price'])) {
+                $sql .= " AND p.price >= :min_price";
+                $params['min_price'] = $filters['min_price'];
+            }
+            
+            if (!empty($filters['max_price'])) {
+                $sql .= " AND p.price <= :max_price";
+                $params['max_price'] = $filters['max_price'];
+            }
+            
+            // Alan aralığı
+            if (!empty($filters['min_area'])) {
+                $sql .= " AND p.area >= :min_area";
+                $params['min_area'] = $filters['min_area'];
+            }
+            
+            if (!empty($filters['max_area'])) {
+                $sql .= " AND p.area <= :max_area";
+                $params['max_area'] = $filters['max_area'];
+            }
+            
+            // Oda sayısı
+            if (!empty($filters['rooms'])) {
+                $sql .= " AND p.room_count = :rooms";
+                $params['rooms'] = $filters['rooms'];
+            }
+            
+            // Banyo sayısı
+            if (!empty($filters['bathrooms'])) {
+                $sql .= " AND p.bathroom_count = :bathrooms";
+                $params['bathrooms'] = $filters['bathrooms'];
+            }
+            
+            // Kat
+            if (!empty($filters['floor'])) {
+                $sql .= " AND p.floor = :floor";
+                $params['floor'] = $filters['floor'];
+            }
+            
+            // Isıtma türü
+            if (!empty($filters['heating_type'])) {
+                $sql .= " AND p.heating_type = :heating_type";
+                $params['heating_type'] = $filters['heating_type'];
+            }
+            
+            // Bina yaşı
+            if (!empty($filters['building_age'])) {
+                switch ($filters['building_age']) {
+                    case '0-5':
+                        $sql .= " AND p.building_age <= 5";
+                        break;
+                    case '5-10':
+                        $sql .= " AND p.building_age > 5 AND p.building_age <= 10";
+                        break;
+                    case '10-20':
+                        $sql .= " AND p.building_age > 10 AND p.building_age <= 20";
+                        break;
+                    case '20+':
+                        $sql .= " AND p.building_age > 20";
+                        break;
+                }
+            }
+            
+            // Durum
+            if (!empty($filters['status'])) {
+                $sql .= " AND p.status = :status";
+                $params['status'] = $filters['status'];
+            }
+            
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetchColumn();
+        } catch (Exception $e) {
+            return 0;
         }
     }
 }

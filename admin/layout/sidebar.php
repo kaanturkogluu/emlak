@@ -20,19 +20,13 @@ $menuItems = [
         'active' => in_array(basename($_SERVER['PHP_SELF']), ['sliders.php', 'slider-edit-page.php'])
     ],
     [
-        'url' => 'users.php',
-        'icon' => 'fas fa-users',
-        'title' => 'Kullanıcılar',
-        'active' => (basename($_SERVER['PHP_SELF']) === 'users.php')
-    ],
-    [
         'url' => 'cities.php',
         'icon' => 'fas fa-map-marker-alt',
         'title' => 'Şehirler',
         'active' => (basename($_SERVER['PHP_SELF']) === 'cities.php')
     ],
     [
-        'url' => 'settings.php',
+        'url' => 'ayarlar',
         'icon' => 'fas fa-cog',
         'title' => 'Ayarlar',
         'active' => (basename($_SERVER['PHP_SELF']) === 'settings.php')
@@ -50,7 +44,7 @@ $menuItems = [
     </div>
     <nav class="sidebar-menu">
         <?php foreach ($menuItems as $item): ?>
-            <a href="<?php echo $item['url']; ?>" class="menu-item <?php echo $item['active'] ? 'active' : ''; ?>">
+            <a href="/emlak/admin/<?php echo $item['url']; ?>" class="menu-item <?php echo $item['active'] ? 'active' : ''; ?>">
                 <i class="<?php echo $item['icon']; ?>"></i>
                 <span><?php echo $item['title']; ?></span>
             </a>

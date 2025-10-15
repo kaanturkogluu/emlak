@@ -43,7 +43,17 @@ if ($_POST) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Giriş - er.com</title>
+    <title>Admin Giriş - <?php echo $helper->getSiteName(); ?></title>
+    
+    <!-- Favicon -->
+    <?php $siteIcon = $helper->getSetting('site_icon', ''); ?>
+    <?php if (!empty($siteIcon)): ?>
+        <link rel="icon" type="image/x-icon" href="<?php echo $helper->e($siteIcon); ?>">
+        <link rel="shortcut icon" type="image/x-icon" href="<?php echo $helper->e($siteIcon); ?>">
+        <link rel="apple-touch-icon" href="<?php echo $helper->e($siteIcon); ?>">
+        <meta name="msapplication-TileImage" content="<?php echo $helper->e($siteIcon); ?>">
+    <?php endif; ?>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {

@@ -5,21 +5,25 @@ RewriteRule ^test/?$ test-rewrite.php [L]
 
 # Admin paneli yönlendirmeleri - Önce bunlar kontrol edilmeli
 RewriteRule ^giris/?$ admin/login.php [L]
-RewriteRule ^admin/?$ admin/index.php [L]
 RewriteRule ^admin/ilanlar/?$ admin/properties.php [L]
 RewriteRule ^admin/ilan/ekle/?$ admin/property-add.php [L]
 RewriteRule ^admin/ilan/duzenle/([0-9]+)/?$ admin/property-edit.php?id=$1 [L]
 RewriteRule ^admin/slider/?$ admin/sliders.php [L]
 RewriteRule ^admin/slider/ekle/?$ admin/slider-edit-page.php [L]
 RewriteRule ^admin/slider/duzenle/([0-9]+)/?$ admin/slider-edit-page.php?id=$1 [L]
-
+RewriteRule ^admin/sehirler/?$ admin/cities.php [L]
+RewriteRule ^admin/ayarlar/?$ admin/settings.php [L]
 RewriteRule ^admin/anasayfa/?$ admin/index.php [L]
+RewriteRule ^admin/?$ admin/index.php [L]
 
 # Sayfa yönlendirmeleri
 RewriteRule ^(anasayfa)?$ pages/anasayfa.php [L]
 RewriteRule ^hakkimizda/?$ pages/hakkimizda.php [L]
 RewriteRule ^iletisim/?$ pages/iletisim.php [L]
 RewriteRule ^ilanlar/?$ pages/ilanlar.php [L]
+RewriteRule ^gizlilik-politikasi/?$ pages/gizlilik-politikasi.php [L]
+RewriteRule ^kullanim-kosullari/?$ pages/kullanim-kosullari.php [L]
+RewriteRule ^kvkk/?$ pages/kvkk.php [L]
 
 # Kategori yönlendirmeleri
 RewriteRule ^satilik/?$ pages/satilik.php [L]

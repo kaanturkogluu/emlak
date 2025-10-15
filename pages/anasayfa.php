@@ -9,7 +9,7 @@ $sliders = $slider->getActive();
 ?>
 
     <!-- Floating Phone Button -->
-    <a href="tel:02125550000" class="floating-phone" aria-label="Hemen Ara">
+    <a href="tel:<?php echo $helper->getSetting('contact_phone', '+90 (212) 555 00 00'); ?>" class="floating-phone" aria-label="Hemen Ara">
         <i class="fas fa-phone-alt"></i>
     </a>
 
