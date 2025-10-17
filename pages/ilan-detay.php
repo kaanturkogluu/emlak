@@ -26,7 +26,7 @@ if (!$ilan) {
 }
 
 // İlan görüntülenme sayısını artır
-$property->incrementViews($ilan['id']);
+$property->incrementViews($ilan['id'] ?? 0);
 
 // İlan resimlerini parse et
 $images = json_decode($ilan['images'] ?? '[]', true);
@@ -36,12 +36,12 @@ $mainImage = $ilan['main_image'] ?? (!empty($images) ? $images[0] : 'https://ima
 $features = json_decode($ilan['features'] ?? '[]', true);
 
 // Meta bilgileri
-$pageTitle = $ilan['title'] . ' - ' . (defined('SITE_NAME') ? SITE_NAME : 'Emlak Sitesi');
-$pageDescription = substr(strip_tags($ilan['description']), 0, 160);
+$pageTitle = ($ilan['title'] ?? 'Başlık Yok') . ' - ' . (defined('SITE_NAME') ? SITE_NAME : 'Emlak Sitesi');
+$pageDescription = substr(strip_tags($ilan['description'] ?? ''), 0, 160);
 $pageImage = $mainImage;
 
 // Benzer ilanları getir
-$similarProperties = $property->getSimilar($ilan['id'], $ilan['property_type'], $ilan['city_id'], 4);
+$similarProperties = $property->getSimilar($ilan['id'] ?? 0, $ilan['property_type'] ?? '', $ilan['city_id'] ?? 0, 4);
 ?>
 
 <!DOCTYPE html>

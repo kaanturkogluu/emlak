@@ -17,6 +17,9 @@
     --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.15);
 }
 
+header{
+    position: sticky !important; 
+}
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
@@ -31,7 +34,7 @@ body {
     padding: 0;
     height: 40px;
     font-size: 0.875rem;
-    position: fixed;
+    position: sticky;
     width: 100%;
     top: 0;
     z-index: 1001;
@@ -89,9 +92,9 @@ body {
 
 header {
     background: var(--white);
-    position: fixed;
+    position: sticky;
     width: 100%;
-    top: 40px;
+    top: 0;
     z-index: 1000;
     border-bottom: 1px solid #e5e7eb;
     transition: all 0.3s ease;
@@ -100,6 +103,7 @@ header {
 header.scrolled {
     top: 0;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    position: sticky !important;
 }
 
 .main-nav {
@@ -301,7 +305,7 @@ nav {
 
 /* Hero Slider */
 .hero-slider {
-    margin-top: 135px;
+    margin-top: 135px; /* Top bar (40px) + Header (95px) = 135px */
     height: 600px;
     position: relative;
     overflow: hidden;
@@ -1244,12 +1248,12 @@ footer::before {
     }
 
     .hero-slider {
-        margin-top: 96px;
+        margin-top: 96px; /* Adjusted for mobile header height */
         height: 500px;
     }
 
     header {
-        top: 40px;
+        top: 0;
     }
 
     header.scrolled {
@@ -1310,11 +1314,11 @@ footer::before {
     }
 
     header {
-        top: 36px;
+        top: 0;
     }
 
     .hero-slider {
-        margin-top: 92px;
+        margin-top: 92px; /* Adjusted for small mobile header height */
         height: 400px;
     }
 

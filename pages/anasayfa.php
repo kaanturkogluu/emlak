@@ -29,19 +29,19 @@ $cities = $stmt->fetchAll();
     <section class="hero-slider" id="home">
         <?php if (!empty($sliders)): ?>
             <?php foreach ($sliders as $index => $sliderItem): ?>
-                <div class="slide <?php echo $index === 0 ? 'active' : ''; ?>" style="background-image: url('<?php echo $helper->e($sliderItem['image']); ?>');">
+                <div class="slide <?php echo $index === 0 ? 'active' : ''; ?>" style="background-image: url('<?php echo $helper->e($sliderItem['image'] ?? ''); ?>');">
                     <div class="slide-overlay">
                         <div class="slide-content">
                             <?php if (!empty($sliderItem['title'])): ?>
-                                <h1><?php echo $helper->e($sliderItem['title']); ?></h1>
+                                <h1><?php echo $helper->e($sliderItem['title'] ?? ''); ?></h1>
                             <?php endif; ?>
                             
                             <?php if (!empty($sliderItem['subtitle'])): ?>
-                                <p><?php echo $helper->e($sliderItem['subtitle']); ?></p>
+                                <p><?php echo $helper->e($sliderItem['subtitle'] ?? ''); ?></p>
                             <?php endif; ?>
                             
                             <?php if (!empty($sliderItem['button_text']) && !empty($sliderItem['button_url'])): ?>
-                                <a href="<?php echo $helper->e($sliderItem['button_url']); ?>" class="btn"><?php echo $helper->e($sliderItem['button_text']); ?></a>
+                                <a href="<?php echo $helper->e($sliderItem['button_url'] ?? ''); ?>" class="btn"><?php echo $helper->e($sliderItem['button_text'] ?? ''); ?></a>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -89,7 +89,7 @@ $cities = $stmt->fetchAll();
             <select name="city" class="search-input">
                 <option value="">Tüm İl</option>
                 <?php foreach ($cities as $city): ?>
-                    <option value="<?php echo $helper->e($city['name']); ?>"><?php echo $helper->e($city['name']); ?></option>
+                    <option value="<?php echo $helper->e($city['name'] ?? ''); ?>"><?php echo $helper->e($city['name'] ?? ''); ?></option>
                 <?php endforeach; ?>
             </select>
             
@@ -146,7 +146,7 @@ $cities = $stmt->fetchAll();
                                         <?php if (!empty($images)): ?>
                                             <?php foreach ($images as $imgIndex => $imageUrl): ?>
                                                 <div class="vitrin-image <?php echo $imgIndex === 0 ? 'active' : ''; ?>">
-                                                    <img src="<?php echo $helper->e($imageUrl); ?>" alt="<?php echo $helper->e($prop['title']); ?>">
+                                                    <img src="<?php echo $helper->e($imageUrl ?? ''); ?>" alt="<?php echo $helper->e($prop['title'] ?? 'Başlık Yok'); ?>">
                                                 </div>
                                             <?php endforeach; ?>
                                         <?php else: ?>
@@ -155,15 +155,15 @@ $cities = $stmt->fetchAll();
                                             </div>
                                         <?php endif; ?>
                                     </div>
-                                    <div class="vitrin-location"><?php echo $helper->e($prop['city_name']); ?> / <?php echo $helper->e($prop['district_name']); ?></div>
-                                    <div class="vitrin-type-badge"><?php echo strtoupper($helper->e($prop['property_type'])); ?></div>
+                                    <div class="vitrin-location"><?php echo $helper->e($prop['city_name'] ?? 'Bilinmiyor'); ?> / <?php echo $helper->e($prop['district_name'] ?? 'Bilinmiyor'); ?></div>
+                                    <div class="vitrin-type-badge"><?php echo strtoupper($helper->e($prop['property_type'] ?? 'Bilinmiyor')); ?></div>
                                 </div>
                                 <div class="vitrin-details">
                                     <div class="vitrin-title">
-                                        <a href="<?php echo $helper->propertyUrl($prop['slug']); ?>"><?php echo $helper->e($prop['title']); ?></a>
+                                        <a href="<?php echo $helper->propertyUrl($prop['slug'] ?? ''); ?>"><?php echo $helper->e($prop['title'] ?? 'Başlık Yok'); ?></a>
                                         <?php if ($prop['featured']): ?><i class="fas fa-check-circle"></i><?php endif; ?>
                                     </div>
-                                    <div class="vitrin-price">₺<?php echo number_format($prop['price'], 0, ',', '.'); ?></div>
+                                    <div class="vitrin-price">₺<?php echo number_format($prop['price'] ?? 0, 0, ',', '.'); ?></div>
                                 </div>
                             </div>
                         <?php endfor; ?>
@@ -198,21 +198,21 @@ $cities = $stmt->fetchAll();
         <?php if (!empty($highlightedProperties)): ?>
         <div class="properties-grid">
             <?php foreach ($highlightedProperties as $prop): ?>
-                <div class="property-card" data-category="<?php echo $helper->e($prop['property_type']); ?>">
+                <div class="property-card" data-category="<?php echo $helper->e($prop['property_type'] ?? 'Bilinmiyor'); ?>">
                     <div class="property-image">
-                        <a href="<?php echo $helper->propertyUrl($prop['slug']); ?>">
-                            <img src="<?php echo $helper->e($prop['main_image'] ?? $helper->asset('images/no-image.svg')); ?>" alt="<?php echo $helper->e($prop['title']); ?>">
+                        <a href="<?php echo $helper->propertyUrl($prop['slug'] ?? ''); ?>">
+                            <img src="<?php echo $helper->e($prop['main_image'] ?? $helper->asset('images/no-image.svg')); ?>" alt="<?php echo $helper->e($prop['title'] ?? 'Başlık Yok'); ?>">
                         </a>
                         <div class="property-badge featured">Öne Çıkan</div>
-                        <div class="property-price">₺<?php echo number_format($prop['price'], 0, ',', '.'); ?></div>
+                        <div class="property-price">₺<?php echo number_format($prop['price'] ?? 0, 0, ',', '.'); ?></div>
                     </div>
                     <div class="property-details">
                         <h3 class="property-title">
-                            <a href="<?php echo $helper->propertyUrl($prop['slug']); ?>"><?php echo $helper->e($prop['title']); ?></a>
+                            <a href="<?php echo $helper->propertyUrl($prop['slug'] ?? ''); ?>"><?php echo $helper->e($prop['title'] ?? 'Başlık Yok'); ?></a>
                         </h3>
                         <div class="property-location">
                             <i class="fas fa-map-marker-alt"></i>
-                            <span><?php echo $helper->e($prop['city_name']); ?><?php if (!empty($prop['district_name'])): ?>, <?php echo $helper->e($prop['district_name']); ?><?php endif; ?></span>
+                            <span><?php echo $helper->e($prop['city_name'] ?? 'Bilinmiyor'); ?><?php if (!empty($prop['district_name'])): ?>, <?php echo $helper->e($prop['district_name'] ?? ''); ?><?php endif; ?></span>
                         </div>
                         <div class="property-features">
                             <?php if (!empty($prop['room_count'])): ?>
@@ -235,7 +235,7 @@ $cities = $stmt->fetchAll();
                             <?php endif; ?>
                         </div>
                         <div class="property-footer">
-                            <a href="<?php echo $helper->propertyUrl($prop['slug']); ?>" class="contact-btn">
+                            <a href="<?php echo $helper->propertyUrl($prop['slug'] ?? ''); ?>" class="contact-btn">
                                 <i class="fas fa-eye"></i> Detay
                             </a>
                         </div>

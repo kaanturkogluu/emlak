@@ -195,10 +195,13 @@ class Helper {
     
     /**
      * HTML escape fonksiyonu
-     * @param string $text
+     * @param string|null $text
      * @return string
      */
     public function e($text) {
+        if ($text === null) {
+            return '';
+        }
         return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
     }
     

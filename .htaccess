@@ -43,5 +43,8 @@ RewriteRule ^sehir/([^/]+)/([^/]+)/?$ pages/ilce.php?city=$1&district=$2 [L]
 # Arama sayfası
 RewriteRule ^arama/?$ pages/arama.php [L]
 
+# index.php isteklerini ana sayfaya yönlendir
+RewriteRule ^index\.php$ pages/anasayfa.php [L]
+
 # Varsayılan açılış dosyası
 DirectoryIndex pages/anasayfa.php

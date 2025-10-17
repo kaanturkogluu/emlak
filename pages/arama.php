@@ -137,7 +137,7 @@ $sortOptions = [
                     <div class="search-row">
                         <div class="search-group">
                             <label for="keyword">Anahtar Kelime</label>
-                            <input type="text" id="keyword" name="keyword" value="<?php echo htmlspecialchars($searchParams['keyword']); ?>" placeholder="Daire, villa, arsa...">
+                            <input type="text" id="keyword" name="keyword" value="<?php echo htmlspecialchars($searchParams['keyword'] ?? ''); ?>" placeholder="Daire, villa, arsa...">
                         </div>
                         
                         <div class="search-group">

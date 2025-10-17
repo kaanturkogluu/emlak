@@ -9,7 +9,7 @@ $adminUser = new AdminUser();
 
 // Zaten giriş yapmışsa dashboard'a yönlendir
 if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
-    header('Location: index.php');
+    header('Location: admin/index.php');
     exit;
 }
 
@@ -28,7 +28,7 @@ if ($_POST) {
             $_SESSION['admin_username'] = $user['username'];
             $_SESSION['admin_full_name'] = $user['full_name'];
             $_SESSION['admin_role'] = $user['role'];
-            header('Location: index.php');
+            header('Location: admin/index.php');
             exit;
         } else {
             $error = 'Kullanıcı adı veya şifre hatalı!';
