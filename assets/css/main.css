@@ -1664,6 +1664,99 @@ footer::before {
     gap: 2rem;
 }
 
+/* Vitrin responsive design */
+@media (max-width: 768px) {
+    .vitrin-group {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .vitrin-section {
+        padding: 3rem 1rem;
+    }
+    
+    .vitrin-header h2 {
+        font-size: 2rem;
+    }
+    
+    .vitrin-header p {
+        font-size: 1rem;
+    }
+    
+    .vitrin-card {
+        margin: 0 auto;
+        max-width: 400px;
+    }
+    
+    .vitrin-image-container {
+        height: 200px;
+    }
+    
+    .vitrin-details {
+        padding: 1.25rem 1.5rem;
+    }
+    
+    .vitrin-title {
+        font-size: 1rem;
+    }
+    
+    .vitrin-price {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .vitrin-section {
+        padding: 2rem 0.5rem;
+    }
+    
+    .vitrin-header {
+        margin-bottom: 2rem;
+    }
+    
+    .vitrin-header h2 {
+        font-size: 1.75rem;
+    }
+    
+    .vitrin-header p {
+        font-size: 0.9rem;
+    }
+    
+    .vitrin-card {
+        max-width: 100%;
+        margin: 0;
+    }
+    
+    .vitrin-image-container {
+        height: 180px;
+    }
+    
+    .vitrin-details {
+        padding: 1rem 1.25rem;
+    }
+    
+    .vitrin-title {
+        font-size: 0.95rem;
+    }
+    
+    .vitrin-price {
+        font-size: 1rem;
+    }
+    
+    .vitrin-location {
+        font-size: 0.9rem;
+        bottom: 10px;
+        left: 15px;
+    }
+    
+    .vitrin-type-badge {
+        font-size: 0.75rem;
+        bottom: 10px;
+        right: 15px;
+        padding: 0.3rem 0.8rem;
+    }
+}
+
 .vitrin-card {
     background: var(--white);
     border-radius: 18px;
