@@ -375,6 +375,31 @@ class Property {
     }
     
     /**
+     * Sadece resim alanlarını güncelle
+     * @param int $id
+     * @param array $data
+     * @return bool
+     */
+    public function updateImages($id, $data) {
+        try {
+            $sql = "UPDATE properties SET 
+                images = :images,
+                main_image = :main_image,
+                updated_at = NOW()
+                WHERE id = :id";
+            
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([
+                'id' => $id,
+                'images' => $data['images'] ?? null,
+                'main_image' => $data['main_image'] ?? null
+            ]);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    
+    /**
      * İlan sil
      * @param int $id
      * @return bool

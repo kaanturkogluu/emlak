@@ -28,8 +28,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'toggle_status' && isset($_GET
     $currentSlider = $slider->getById($id);
     if ($currentSlider) {
         $newStatus = $currentSlider['status'] === 'active' ? 'inactive' : 'active';
-        $data = ['status' => $newStatus];
-        if ($slider->update($id, $data)) {
+        if ($slider->updateStatus($id, $newStatus)) {
             $success = 'Slider durumu güncellendi.';
         } else {
             $error = 'Slider durumu güncellenirken hata oluştu.';

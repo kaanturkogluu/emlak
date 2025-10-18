@@ -40,34 +40,10 @@ $districts = $db->prepare("SELECT * FROM districts WHERE city_id = ? ORDER BY na
 $districts->execute([$currentProperty['city_id']]);
 $districts = $districts->fetchAll();
 
-// Resim silme işlemi
-if (isset($_POST['delete_image_index'])) {
-    $deleteIndex = (int)$_POST['delete_image_index'];
-    if ($deleteIndex >= 0 && $deleteIndex < count($existingImages)) {
-        // Resmi diziden kaldır
-        unset($existingImages[$deleteIndex]);
-        $existingImages = array_values($existingImages); // Index'leri yeniden düzenle
-        
-        // Ana resim silinmişse, yeni ana resim belirle
-        $newMainImage = !empty($existingImages) ? $existingImages[0] : null;
-        
-        // Veritabanını güncelle
-        $updateData = [
-            'images' => json_encode($existingImages),
-            'main_image' => $newMainImage
-        ];
-        
-        if ($property->update($id, $updateData)) {
-            $success = 'Resim başarıyla silindi!';
-            $currentProperty = $property->getById($id);
-        } else {
-            $error = 'Resim silinirken bir hata oluştu!';
-        }
-    }
-}
+// Resim silme işlemi artık ayrı endpoint'te (delete-property-image.php) yapılıyor
 
 // Form işleme
-if ($_POST && !isset($_POST['delete_image_index'])) {
+if ($_POST) {
     // Önce resim yükleme işlemini yap
     $uploadedImages = [];
     if (!empty($_FILES['images']['name'][0])) {
@@ -137,6 +113,21 @@ if ($_POST && !isset($_POST['delete_image_index'])) {
     if (!empty($uploadedImages)) {
         $allImages = array_merge($allImages, $uploadedImages);
         $data['main_image'] = $uploadedImages[0]; // Yeni ana resim
+    } else {
+        // Yeni resim yüklenmediyse mevcut ana resmi koru
+        if (!empty($existingImages)) {
+            // Mevcut ana resim varsa onu koru, yoksa ilk resmi ana resim yap
+            $data['main_image'] = $currentProperty['main_image'] ?: $existingImages[0];
+        } else {
+            // Hiç resim yoksa ana resmi null yap
+            $data['main_image'] = null;
+        }
+        
+        // preserve_main_image kontrolü
+        if (isset($_POST['preserve_main_image']) && $_POST['preserve_main_image'] == '1') {
+            // Mevcut ana resmi koru
+            $data['main_image'] = $currentProperty['main_image'];
+        }
     }
     
     // Resimleri JSON olarak kaydet
@@ -364,10 +355,21 @@ require_once __DIR__ . '/layout/header.php';
                 <?php if (!empty($existingImages)): ?>
                     <div class="existing-images">
                         <h4>Mevcut Resimler</h4>
+                        <?php if (!empty($currentProperty['main_image'])): ?>
+                            <div class="main-image-info" style="background: #e8f5e8; padding: 10px; border-radius: 5px; margin-bottom: 15px; border: 1px solid #c3e6cb;">
+                                <i class="fas fa-star" style="color: #28a745;"></i>
+                                <strong>Ana Resim:</strong> <?php echo basename($currentProperty['main_image']); ?>
+                            </div>
+                        <?php endif; ?>
                         <div class="image-grid">
                             <?php foreach ($existingImages as $index => $imageUrl): ?>
-                                <div class="image-item">
+                                <div class="image-item <?php echo $imageUrl === $currentProperty['main_image'] ? 'main-image' : ''; ?>">
                                     <img src="<?php echo $helper->e($imageUrl); ?>" alt="İlan Resmi">
+                                    <?php if ($imageUrl === $currentProperty['main_image']): ?>
+                                        <div class="main-image-badge">
+                                            <i class="fas fa-star"></i> Ana Resim
+                                        </div>
+                                    <?php endif; ?>
                                     <div class="image-actions">
                                         <button type="button" class="btn-delete" onclick="deleteImage(<?php echo $index; ?>)">
                                             <i class="fas fa-trash"></i>
@@ -461,21 +463,124 @@ function loadDistricts(cityId) {
 
 function deleteImage(imageIndex) {
     if (confirm('Bu resmi silmek istediğinizden emin misiniz?')) {
-        // Mevcut resimlerden belirtilen index'i kaldır
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '';
+        // AJAX ile resim silme
+        const formData = new FormData();
+        formData.append('property_id', <?php echo $id; ?>);
+        formData.append('image_index', imageIndex);
         
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'delete_image_index';
-        input.value = imageIndex;
-        
-        form.appendChild(input);
-        document.body.appendChild(form);
-        form.submit();
+        fetch('delete-property-image.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Başarı mesajı göster
+                showMessage(data.message, 'success');
+                
+                // Resim listesini güncelle
+                updateImageList(data.images, data.main_image);
+            } else {
+                showMessage(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Resim silme hatası:', error);
+            showMessage('Resim silinirken bir hata oluştu!', 'error');
+        });
     }
 }
+
+function showMessage(message, type) {
+    // Mevcut mesajları temizle
+    const existingAlerts = document.querySelectorAll('.alert');
+    existingAlerts.forEach(alert => alert.remove());
+    
+    // Yeni mesaj oluştur
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type === 'success' ? 'success' : 'error'}`;
+    alertDiv.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+        ${message}
+    `;
+    
+    // Mesajı sayfanın üstüne ekle
+    const contentHeader = document.querySelector('.content-header');
+    if (contentHeader) {
+        contentHeader.insertAdjacentElement('afterend', alertDiv);
+    }
+    
+    // 3 saniye sonra mesajı kaldır
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 3000);
+}
+
+function updateImageList(images, mainImage) {
+    const existingImagesDiv = document.querySelector('.existing-images');
+    if (!existingImagesDiv) return;
+    
+    if (images.length === 0) {
+        // Hiç resim yoksa tüm resim bölümünü gizle
+        existingImagesDiv.style.display = 'none';
+        return;
+    }
+    
+    // Ana resim bilgisini güncelle
+    const mainImageInfo = existingImagesDiv.querySelector('.main-image-info');
+    if (mainImageInfo) {
+        if (mainImage) {
+            mainImageInfo.innerHTML = `
+                <i class="fas fa-star" style="color: #28a745;"></i>
+                <strong>Ana Resim:</strong> ${mainImage.split('/').pop()}
+            `;
+            mainImageInfo.style.display = 'block';
+        } else {
+            mainImageInfo.style.display = 'none';
+        }
+    }
+    
+    // Resim grid'ini güncelle
+    const imageGrid = existingImagesDiv.querySelector('.image-grid');
+    if (imageGrid) {
+        imageGrid.innerHTML = '';
+        
+        images.forEach((imageUrl, index) => {
+            const imageItem = document.createElement('div');
+            imageItem.className = `image-item ${imageUrl === mainImage ? 'main-image' : ''}`;
+            
+            imageItem.innerHTML = `
+                <img src="${imageUrl}" alt="İlan Resmi">
+                ${imageUrl === mainImage ? '<div class="main-image-badge"><i class="fas fa-star"></i> Ana Resim</div>' : ''}
+                <div class="image-actions">
+                    <button type="button" class="btn-delete" onclick="deleteImage(${index})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            
+            imageGrid.appendChild(imageItem);
+        });
+    }
+}
+
+// Form gönderilmeden önce ana resmin korunmasını sağla
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.property-form');
+    const imagesInput = document.getElementById('images');
+    
+    form.addEventListener('submit', function(e) {
+        // Eğer yeni resim yüklenmemişse, mevcut ana resmi koru
+        if (imagesInput.files.length === 0) {
+            // Mevcut ana resim bilgisini form'a ekle
+            const mainImageInput = document.createElement('input');
+            mainImageInput.type = 'hidden';
+            mainImageInput.name = 'preserve_main_image';
+            mainImageInput.value = '1';
+            form.appendChild(mainImageInput);
+        }
+    });
+});
 </script>
 
 <style>
@@ -607,6 +712,26 @@ function deleteImage(imageIndex) {
     transform: translateY(-2px);
 }
 
+.image-item.main-image {
+    border: 3px solid #28a745;
+    box-shadow: 0 0 10px rgba(40, 167, 69, 0.3);
+}
+
+.main-image-badge {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: rgba(40, 167, 69, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
 .image-item img {
     width: 100%;
     height: 120px;
@@ -677,6 +802,45 @@ function deleteImage(imageIndex) {
 .btn-secondary:hover {
     background: #545b62;
     transform: translateY(-1px);
+}
+
+/* Alert Styles */
+.alert {
+    padding: 15px 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    animation: slideDown 0.3s ease-out;
+}
+
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert i {
+    font-size: 18px;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Responsive */

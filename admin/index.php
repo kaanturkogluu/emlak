@@ -50,70 +50,70 @@ require_once __DIR__ . '/layout/header.php';
 ?>
 
 <!-- Dashboard Stats -->
-<div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
-    <div class="stat-card" style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center;">
-        <div style="font-size: 2.5rem; color: #667eea; margin-bottom: 10px;">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+        <div class="text-3xl text-blue-500 mb-3">
             <i class="fas fa-home"></i>
         </div>
-        <h3 style="color: #2c3e50; margin-bottom: 5px;">Toplam İlan</h3>
-        <div style="font-size: 2rem; font-weight: 700; color: #27ae60;"><?php echo $totalProperties; ?></div>
+        <h3 class="text-gray-800 font-semibold mb-2">Toplam İlan</h3>
+        <div class="text-2xl font-bold text-green-600"><?php echo $totalProperties; ?></div>
     </div>
     
-    <div class="stat-card" style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center;">
-        <div style="font-size: 2.5rem; color: #f39c12; margin-bottom: 10px;">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+        <div class="text-3xl text-orange-500 mb-3">
             <i class="fas fa-images"></i>
         </div>
-        <h3 style="color: #2c3e50; margin-bottom: 5px;">Aktif Slider</h3>
-        <div style="font-size: 2rem; font-weight: 700; color: #27ae60;"><?php echo $totalSliders; ?></div>
+        <h3 class="text-gray-800 font-semibold mb-2">Aktif Slider</h3>
+        <div class="text-2xl font-bold text-green-600"><?php echo $totalSliders; ?></div>
     </div>
     
-    <div class="stat-card" style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center;">
-        <div style="font-size: 2.5rem; color: #e74c3c; margin-bottom: 10px;">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+        <div class="text-3xl text-red-500 mb-3">
             <i class="fas fa-users"></i>
         </div>
-        <h3 style="color: #2c3e50; margin-bottom: 5px;">Admin Kullanıcı</h3>
-        <div style="font-size: 2rem; font-weight: 700; color: #27ae60;"><?php echo $totalUsers; ?></div>
+        <h3 class="text-gray-800 font-semibold mb-2">Admin Kullanıcı</h3>
+        <div class="text-2xl font-bold text-green-600"><?php echo $totalUsers; ?></div>
     </div>
     
-    <div class="stat-card" style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center;">
-        <div style="font-size: 2.5rem; color: #9b59b6; margin-bottom: 10px;">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+        <div class="text-3xl text-purple-500 mb-3">
             <i class="fas fa-map-marker-alt"></i>
         </div>
-        <h3 style="color: #2c3e50; margin-bottom: 5px;">Şehir Sayısı</h3>
-        <div style="font-size: 2rem; font-weight: 700; color: #27ae60;"><?php echo $totalCities; ?></div>
+        <h3 class="text-gray-800 font-semibold mb-2">Şehir Sayısı</h3>
+        <div class="text-2xl font-bold text-green-600"><?php echo $totalCities; ?></div>
     </div>
 </div>
 
 <!-- Quick Actions -->
-<div class="quick-actions" style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 30px;">
-    <h3 style="color: #2c3e50; margin-bottom: 20px; font-size: 1.5rem;">Hızlı İşlemler</h3>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-        <a href="property-add.php" class="btn btn-primary" style="text-align: center; padding: 20px;">
-            <i class="fas fa-plus" style="display: block; font-size: 2rem; margin-bottom: 10px;"></i>
-            Yeni İlan Ekle
+<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+    <h3 class="text-xl font-bold text-gray-800 mb-6">Hızlı İşlemler</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <a href="property-add.php" class="bg-blue-500 hover:bg-blue-600 text-white rounded-lg p-6 text-center transition-colors">
+            <i class="fas fa-plus text-2xl mb-3 block"></i>
+            <span class="font-medium">Yeni İlan Ekle</span>
         </a>
-        <a href="slider-edit-page.php" class="btn btn-warning" style="text-align: center; padding: 20px;">
-            <i class="fas fa-images" style="display: block; font-size: 2rem; margin-bottom: 10px;"></i>
-            Slider Ekle
+        <a href="slider-edit-page.php" class="bg-orange-500 hover:bg-orange-600 text-white rounded-lg p-6 text-center transition-colors">
+            <i class="fas fa-images text-2xl mb-3 block"></i>
+            <span class="font-medium">Slider Ekle</span>
         </a>
-        <a href="properties.php" class="btn btn-success" style="text-align: center; padding: 20px;">
-            <i class="fas fa-list" style="display: block; font-size: 2rem; margin-bottom: 10px;"></i>
-            İlanları Görüntüle
+        <a href="properties.php" class="bg-green-500 hover:bg-green-600 text-white rounded-lg p-6 text-center transition-colors">
+            <i class="fas fa-list text-2xl mb-3 block"></i>
+            <span class="font-medium">İlanları Görüntüle</span>
         </a>
-        <a href="sliders.php" class="btn btn-secondary" style="text-align: center; padding: 20px;">
-            <i class="fas fa-cog" style="display: block; font-size: 2rem; margin-bottom: 10px;"></i>
-            Slider Yönetimi
+        <a href="sliders.php" class="bg-gray-500 hover:bg-gray-600 text-white rounded-lg p-6 text-center transition-colors">
+            <i class="fas fa-cog text-2xl mb-3 block"></i>
+            <span class="font-medium">Slider Yönetimi</span>
         </a>
     </div>
 </div>
 
 <!-- Recent Content -->
-<div class="recent-content" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     <!-- Son İlanlar -->
-    <div class="recent-properties" style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h3 style="color: #2c3e50; font-size: 1.3rem;">Son Eklenen İlanlar</h3>
-            <a href="properties.php" class="btn btn-sm btn-primary">Tümünü Gör</a>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-lg font-bold text-gray-800">Son Eklenen İlanlar</h3>
+            <a href="properties.php" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm font-medium transition-colors">Tümünü Gör</a>
         </div>
         
         <?php if (!empty($recentProperties)): ?>

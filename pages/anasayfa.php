@@ -1,4 +1,6 @@
-<?php 
+<?php
+// Session başlat - en başta olmalı
+session_start();
 
 require_once __DIR__."/../includes/header.php";
 require_once __DIR__."/../classes/Slider.php";
@@ -244,14 +246,14 @@ $cities = $stmt->fetchAll();
             <?php endforeach; ?>
         </div>
         <?php else: ?>
-        <div class="no-properties">
+        <!-- <div class="no-properties">
             <div class="no-properties-content">
                 <i class="fas fa-fire"></i>
                 <h3>Henüz Öne Çıkan İlan Bulunmuyor</h3>
                 <p>Admin panelinden öne çıkan ilanlar seçebilirsiniz.</p>
                 <a href="<?php echo $helper->getBaseUrl(); ?>/admin/featured-properties.php" class="btn btn-primary">Öne Çıkan İlanları Yönet</a>
             </div>
-        </div>
+        </div> -->
         <?php endif; ?>
     </section>
 

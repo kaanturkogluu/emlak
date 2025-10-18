@@ -32,18 +32,29 @@ $helper = Helper::getInstance();
         <meta name="msapplication-TileImage" content="<?php echo $helper->e($siteIcon); ?>">
     <?php endif; ?>
     
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#1e40af',
+                        accent: '#06b6d4',
+                        dark: '#1f2937',
+                        light: '#f8fafc'
+                    }
+                }
+            }
         }
-        
+    </script>
+    
+    <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f8f9fa;
-            color: #2c3e50;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
         
         /* Sidebar */
@@ -654,70 +665,89 @@ $helper = Helper::getInstance();
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-50">
     <!-- Sidebar Overlay for Mobile -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden" id="sidebarOverlay"></div>
     
     <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h2>Admin Panel</h2>
-            <button class="toggle-btn" onclick="toggleSidebar()">
-                <i class="fas fa-bars"></i>
+    <div class="fixed left-0 top-0 h-full w-64 bg-white shadow-xl transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50" id="sidebar">
+        <!-- Sidebar Header -->
+        <div class="flex items-center justify-between p-6 border-b border-gray-200">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-home text-white text-sm"></i>
+                </div>
+                <span class="text-xl font-bold text-gray-800">Admin Panel</span>
+            </div>
+            <button class="p-2 rounded-lg hover:bg-gray-100 transition-colors" onclick="toggleSidebar()">
+                <i class="fas fa-bars text-gray-600"></i>
             </button>
         </div>
-        <nav class="sidebar-menu">
-            <a href="index.php" class="menu-item <?php echo (basename($_SERVER['PHP_SELF']) === 'index.php') ? 'active' : ''; ?>">
-                <i class="fas fa-tachometer-alt"></i>
-                <span>Dashboard</span>
+        
+        <!-- Navigation -->
+        <nav class="p-4 space-y-2">
+            <a href="index.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 <?php echo (basename($_SERVER['PHP_SELF']) === 'index.php') ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?>">
+                <i class="fas fa-tachometer-alt w-5"></i>
+                <span class="font-medium">Dashboard</span>
             </a>
-            <a href="properties.php" class="menu-item <?php echo (basename($_SERVER['PHP_SELF']) === 'properties.php' || basename($_SERVER['PHP_SELF']) === 'property-add.php' || basename($_SERVER['PHP_SELF']) === 'property-edit.php') ? 'active' : ''; ?>">
-                <i class="fas fa-home"></i>
-                <span>İlanlar</span>
+            <a href="properties.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 <?php echo (basename($_SERVER['PHP_SELF']) === 'properties.php' || basename($_SERVER['PHP_SELF']) === 'property-add.php' || basename($_SERVER['PHP_SELF']) === 'property-edit.php') ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?>">
+                <i class="fas fa-home w-5"></i>
+                <span class="font-medium">İlanlar</span>
             </a>
-            <a href="sliders.php" class="menu-item <?php echo (basename($_SERVER['PHP_SELF']) === 'sliders.php' || basename($_SERVER['PHP_SELF']) === 'slider-edit-page.php') ? 'active' : ''; ?>">
-                <i class="fas fa-images"></i>
-                <span>Slider</span>
+            <a href="sliders.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 <?php echo (basename($_SERVER['PHP_SELF']) === 'sliders.php' || basename($_SERVER['PHP_SELF']) === 'slider-edit-page.php') ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?>">
+                <i class="fas fa-images w-5"></i>
+                <span class="font-medium">Slider</span>
             </a>
-            <a href="vitrin.php" class="menu-item <?php echo (basename($_SERVER['PHP_SELF']) === 'vitrin.php') ? 'active' : ''; ?>">
-                <i class="fas fa-star"></i>
-                <span>Vitrin İlanları</span>
+            <a href="vitrin.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 <?php echo (basename($_SERVER['PHP_SELF']) === 'vitrin.php') ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?>">
+                <i class="fas fa-star w-5"></i>
+                <span class="font-medium">Vitrin İlanları</span>
             </a>
-            <a href="featured-properties.php" class="menu-item <?php echo (basename($_SERVER['PHP_SELF']) === 'featured-properties.php') ? 'active' : ''; ?>">
-                <i class="fas fa-fire"></i>
-                <span>Öne Çıkan İlanlar</span>
+            <a href="featured-properties.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 <?php echo (basename($_SERVER['PHP_SELF']) === 'featured-properties.php') ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?>">
+                <i class="fas fa-fire w-5"></i>
+                <span class="font-medium">Öne Çıkan İlanlar</span>
             </a>
-            <a href="cities.php" class="menu-item <?php echo (basename($_SERVER['PHP_SELF']) === 'cities.php') ? 'active' : ''; ?>">
-                <i class="fas fa-map-marker-alt"></i>
-                <span>Şehirler</span>
+            <a href="page-contents.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 <?php echo (basename($_SERVER['PHP_SELF']) === 'page-contents.php') ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?>">
+                <i class="fas fa-file-alt w-5"></i>
+                <span class="font-medium">Sayfa İçerikleri</span>
             </a>
-            <a href="settings.php" class="menu-item <?php echo (basename($_SERVER['PHP_SELF']) === 'settings.php') ? 'active' : ''; ?>">
-                <i class="fas fa-cog"></i>
-                <span>Ayarlar</span>
+            <a href="cities.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 <?php echo (basename($_SERVER['PHP_SELF']) === 'cities.php') ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?>">
+                <i class="fas fa-map-marker-alt w-5"></i>
+                <span class="font-medium">Şehirler</span>
+            </a>
+            <a href="settings.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 <?php echo (basename($_SERVER['PHP_SELF']) === 'settings.php') ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?>">
+                <i class="fas fa-cog w-5"></i>
+                <span class="font-medium">Ayarlar</span>
             </a>
         </nav>
     </div>
     
     <!-- Main Content -->
-    <div class="main-content" id="mainContent">
+    <div class="lg:ml-64 transition-all duration-300 ease-in-out" id="mainContent">
         <!-- Top Bar -->
-        <div class="top-bar">
-            <div style="display: flex; align-items: center;">
-                <button class="mobile-menu-btn" onclick="toggleMobileSidebar()">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <h1><?php echo isset($pageTitle) ? $pageTitle : 'Admin Panel'; ?></h1>
-            </div>
-            <div class="user-info">
-                <div class="user-avatar">
-                    <?php echo strtoupper(substr($currentUser['username'], 0, 1)); ?>
+        <div class="bg-white shadow-sm border-b border-gray-200 px-4 lg:px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3 lg:space-x-4">
+                    <button class="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors" onclick="toggleMobileSidebar()">
+                        <i class="fas fa-bars text-gray-600"></i>
+                    </button>
+                    <h1 class="text-lg lg:text-2xl font-bold text-gray-800 truncate"><?php echo isset($pageTitle) ? $pageTitle : 'Admin Panel'; ?></h1>
                 </div>
-                <span><?php echo $helper->e($currentUser['full_name']); ?></span>
-                <a href="logout.php" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i> Çıkış
-                </a>
+                <div class="flex items-center space-x-2 lg:space-x-4">
+                    <!-- Desktop User Info -->
+                    <div class="hidden lg:flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                            <?php echo strtoupper(substr($currentUser['username'], 0, 1)); ?>
+                        </div>
+                        <span class="text-gray-700 font-medium"><?php echo $helper->e($currentUser['full_name']); ?></span>
+                    </div>
+                    <!-- Mobile Logout Button -->
+                    <a href="logout.php" class="flex items-center space-x-1 lg:space-x-2 px-3 lg:px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="font-medium hidden sm:inline">Çıkış</span>
+                    </a>
+                </div>
             </div>
         </div>
         
         <!-- Content -->
-        <div class="content">
+        <div class="p-4 lg:p-6">

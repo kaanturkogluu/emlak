@@ -30,10 +30,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             if ($name && $plate_code) {
                 try {
-                    $stmt = $db->prepare("INSERT INTO cities (name, plate_code, region, status) VALUES (?, ?, ?, 'active')");
-                    $stmt->execute([$name, $plate_code, $region]);
-                    $message = 'Şehir başarıyla eklendi!';
-                    $messageType = 'success';
+                    // Slug oluştur
+                    $helper = Helper::getInstance();
+                    $slug = $helper->createSlug($name);
+                    
+                    // Aynı slug var mı kontrol et
+                    $checkStmt = $db->prepare("SELECT id FROM cities WHERE slug = ?");
+                    $checkStmt->execute([$slug]);
+                    
+                    if ($checkStmt->fetch()) {
+                        $message = 'Bu isimde bir şehir zaten mevcut!';
+                        $messageType = 'error';
+                    } else {
+                        $stmt = $db->prepare("INSERT INTO cities (name, slug, plate_code, region, status) VALUES (?, ?, ?, ?, 'active')");
+                        $stmt->execute([$name, $slug, $plate_code, $region]);
+                        $message = 'Şehir başarıyla eklendi!';
+                        $messageType = 'success';
+                    }
                 } catch (Exception $e) {
                     $message = 'Şehir eklenirken hata oluştu: ' . $e->getMessage();
                     $messageType = 'error';
@@ -50,10 +63,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             if ($city_id && $name) {
                 try {
-                    $stmt = $db->prepare("INSERT INTO districts (city_id, name, status) VALUES (?, ?, 'active')");
-                    $stmt->execute([$city_id, $name]);
-                    $message = 'İlçe başarıyla eklendi!';
-                    $messageType = 'success';
+                    // Slug oluştur
+                    $helper = Helper::getInstance();
+                    $slug = $helper->createSlug($name);
+                    
+                    // Aynı şehirde aynı slug var mı kontrol et
+                    $checkStmt = $db->prepare("SELECT id FROM districts WHERE city_id = ? AND slug = ?");
+                    $checkStmt->execute([$city_id, $slug]);
+                    
+                    if ($checkStmt->fetch()) {
+                        $message = 'Bu şehirde aynı isimde bir ilçe zaten mevcut!';
+                        $messageType = 'error';
+                    } else {
+                        $stmt = $db->prepare("INSERT INTO districts (city_id, name, slug, status) VALUES (?, ?, ?, 'active')");
+                        $stmt->execute([$city_id, $name, $slug]);
+                        $message = 'İlçe başarıyla eklendi!';
+                        $messageType = 'success';
+                    }
                 } catch (Exception $e) {
                     $message = 'İlçe eklenirken hata oluştu: ' . $e->getMessage();
                     $messageType = 'error';
@@ -70,10 +96,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             if ($district_id && $name) {
                 try {
-                    $stmt = $db->prepare("INSERT INTO neighborhoods (district_id, name, status) VALUES (?, ?, 'active')");
-                    $stmt->execute([$district_id, $name]);
-                    $message = 'Mahalle başarıyla eklendi!';
-                    $messageType = 'success';
+                    // Aynı ilçede aynı mahalle var mı kontrol et
+                    $checkStmt = $db->prepare("SELECT id FROM neighborhoods WHERE district_id = ? AND name = ?");
+                    $checkStmt->execute([$district_id, $name]);
+                    
+                    if ($checkStmt->fetch()) {
+                        $message = 'Bu ilçede aynı isimde bir mahalle zaten mevcut!';
+                        $messageType = 'error';
+                    } else {
+                        $stmt = $db->prepare("INSERT INTO neighborhoods (district_id, name, status) VALUES (?, ?, 'active')");
+                        $stmt->execute([$district_id, $name]);
+                        $message = 'Mahalle başarıyla eklendi!';
+                        $messageType = 'success';
+                    }
                 } catch (Exception $e) {
                     $message = 'Mahalle eklenirken hata oluştu: ' . $e->getMessage();
                     $messageType = 'error';
@@ -447,7 +482,7 @@ $neighborhoods = $stmt->fetchAll();
                 <input type="hidden" name="action" value="add_neighborhood">
                 <div class="form-group">
                     <label for="district_id">İlçe</label>
-                    <select id="district_id" name="district_id" required>
+                    <select id="district_id" name="district_id" required onchange="loadNeighborhoods(this.value)">
                         <option value="">İlçe Seçin</option>
                         <?php foreach ($districts as $district): ?>
                             <option value="<?php echo $district['id']; ?>"><?php echo $helper->e($district['name'] . ' - ' . $district['city_name']); ?></option>
@@ -462,6 +497,14 @@ $neighborhoods = $stmt->fetchAll();
                     <button type="submit" class="btn btn-primary">Mahalle Ekle</button>
                 </div>
             </form>
+            
+            <!-- Mevcut Mahalleler -->
+            <div id="existing-neighborhoods" style="margin-top: 30px; display: none;">
+                <h3>Bu İlçedeki Mevcut Mahalleler</h3>
+                <div id="neighborhoods-list" class="neighborhoods-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-top: 15px;">
+                    <!-- Mahalleler buraya yüklenecek -->
+                </div>
+            </div>
             
             <h2>Mevcut Mahalleler</h2>
             <table class="table">
@@ -511,6 +554,98 @@ $neighborhoods = $stmt->fetchAll();
         
         // Seçilen tab butonunu aktif yap
         event.target.classList.add('active');
+    }
+    
+    function loadNeighborhoods(districtId) {
+        const neighborhoodsList = document.getElementById('neighborhoods-list');
+        const existingNeighborhoods = document.getElementById('existing-neighborhoods');
+        
+        if (!districtId) {
+            existingNeighborhoods.style.display = 'none';
+            return;
+        }
+        
+        // Loading göster
+        neighborhoodsList.innerHTML = '<div style="text-align: center; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> Mahalleler yükleniyor...</div>';
+        existingNeighborhoods.style.display = 'block';
+        
+        // İlçe adını al
+        const districtSelect = document.getElementById('district_id');
+        const selectedOption = districtSelect.options[districtSelect.selectedIndex];
+        const districtName = selectedOption.text.split(' - ')[0];
+        
+        // Önce kendi veritabanımızdan mahalleleri çek
+        loadNeighborhoodsFromDB(districtId);
+        
+        // Aynı zamanda Türkiye API'sinden de çekmeye çalış (opsiyonel)
+        fetch(`https://api.turkiye.gov.tr/api/il-ilce-mahalle?ilce=${encodeURIComponent(districtName)}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('API yanıt vermedi');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.length > 0) {
+                    // API'den gelen verileri göster
+                    let html = '<div style="margin-bottom: 15px; padding: 10px; background: #d4edda; border: 1px solid #c3e6cb; border-radius: 5px; color: #155724;"><i class="fas fa-info-circle"></i> Türkiye Resmi API\'sinden gelen mahalleler:</div>';
+                    data.forEach(neighborhood => {
+                        html += `
+                            <div style="background: #e8f5e8; padding: 12px; border-radius: 8px; border: 1px solid #c3e6cb; transition: all 0.3s ease; margin-bottom: 8px;" 
+                                 onmouseover="this.style.backgroundColor='#d4edda'" 
+                                 onmouseout="this.style.backgroundColor='#e8f5e8'">
+                                <div style="font-weight: 600; color: #155724; margin-bottom: 4px;">
+                                    ${neighborhood.mahalleAdi || neighborhood.name || neighborhood.title}
+                                </div>
+                                ${neighborhood.postaKodu ? `<div style="font-size: 0.85em; color: #6c757d;">Posta Kodu: ${neighborhood.postaKodu}</div>` : ''}
+                                ${neighborhood.nufus ? `<div style="font-size: 0.85em; color: #6c757d;">Nüfus: ${neighborhood.nufus}</div>` : ''}
+                                <div style="font-size: 0.75em; color: #28a745; margin-top: 4px;"><i class="fas fa-external-link-alt"></i> Resmi API</div>
+                            </div>
+                        `;
+                    });
+                    
+                    // Mevcut içeriğin yanına ekle
+                    const currentContent = neighborhoodsList.innerHTML;
+                    neighborhoodsList.innerHTML = currentContent + html;
+                }
+            })
+            .catch(error => {
+                console.log('Türkiye API\'sine erişilemedi, sadece veritabanı verileri gösteriliyor.');
+            });
+    }
+    
+    function loadNeighborhoodsFromDB(districtId) {
+        const neighborhoodsList = document.getElementById('neighborhoods-list');
+        
+        fetch(`../api/neighborhoods.php?district_id=${districtId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    let html = '<div style="margin-bottom: 15px; padding: 10px; background: #cce5ff; border: 1px solid #99d6ff; border-radius: 5px; color: #004085;"><i class="fas fa-database"></i> Veritabanından gelen mahalleler:</div>';
+                    data.forEach(neighborhood => {
+                        html += `
+                            <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; border: 1px solid #dee2e6; transition: all 0.3s ease; margin-bottom: 8px;" 
+                                 onmouseover="this.style.backgroundColor='#e9ecef'" 
+                                 onmouseout="this.style.backgroundColor='#f8f9fa'">
+                                <div style="font-weight: 600; color: #495057; margin-bottom: 4px;">
+                                    ${neighborhood.name}
+                                </div>
+                                <div style="font-size: 0.85em; color: #6c757d;">
+                                    ${neighborhood.district_name} - ${neighborhood.city_name}
+                                </div>
+                                <div style="font-size: 0.75em; color: #007bff; margin-top: 4px;"><i class="fas fa-database"></i> Veritabanı</div>
+                            </div>
+                        `;
+                    });
+                    neighborhoodsList.innerHTML = html;
+                } else {
+                    neighborhoodsList.innerHTML = '<div style="text-align: center; padding: 20px; color: #6c757d;"><i class="fas fa-info-circle"></i> Bu ilçede henüz mahalle eklenmemiş. Yukarıdaki formu kullanarak mahalle ekleyebilirsiniz.</div>';
+                }
+            })
+            .catch(error => {
+                console.error('Veritabanı hatası:', error);
+                neighborhoodsList.innerHTML = '<div style="text-align: center; padding: 20px; color: #dc3545;"><i class="fas fa-exclamation-triangle"></i> Mahalleler yüklenirken hata oluştu.</div>';
+            });
     }
 </script>
 

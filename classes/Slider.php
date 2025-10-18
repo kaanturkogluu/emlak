@@ -101,7 +101,7 @@ class Slider {
                 ");
                 
                 return $stmt->execute([
-                    $data['title'],
+                    $data['title'] ?? '',
                     $data['subtitle'] ?? '',
                     $data['button_text'] ?? '',
                     $data['button_url'] ?? '',
@@ -119,7 +119,7 @@ class Slider {
                 ");
                 
                 return $stmt->execute([
-                    $data['title'],
+                    $data['title'] ?? '',
                     $data['subtitle'] ?? '',
                     $data['button_text'] ?? '',
                     $data['button_url'] ?? '',
@@ -128,6 +128,21 @@ class Slider {
                     $id
                 ]);
             }
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    
+    /**
+     * Sadece slider durumunu güncelle
+     * @param int $id
+     * @param string $status
+     * @return bool
+     */
+    public function updateStatus($id, $status) {
+        try {
+            $stmt = $this->db->prepare("UPDATE sliders SET status = ? WHERE id = ?");
+            return $stmt->execute([$status, $id]);
         } catch (Exception $e) {
             return false;
         }

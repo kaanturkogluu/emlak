@@ -1,4 +1,7 @@
-<?php 
+<?php
+// Session başlat - en başta olmalı
+session_start();
+
 require_once __DIR__ . "/../config/config.php";
 require_once __DIR__ . "/../classes/Helper.php";
 

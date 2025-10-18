@@ -534,7 +534,7 @@ nav {
 
 /* Hero Slider */
 .hero-slider {
-    margin-top: 135px; /* Top bar (40px) + Header (95px) = 135px */
+    margin-top: 0; /* Top bar (40px) + Header (95px) = 135px */
     height: 600px;
     position: relative;
     overflow: hidden;
@@ -1894,4 +1894,162 @@ footer::before {
     background: var(--accent-color);
     width: 45px;
     border-radius: 8px;
+}
+
+/* Page Header Styles */
+.page-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 4rem 2rem;
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.page-header .container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.page-header-content h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: 800;
+    color: white;
+}
+
+.page-header-content p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+    color: white;
+}
+
+/* Content Section Styles */
+.content-section {
+    padding: 2rem;
+    background: #f8f9fa;
+    min-height: 60vh;
+}
+
+.content-section .container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.content-wrapper {
+    background: white;
+    padding: 3rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.content-text h2 {
+    color: #2c3e50;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    margin-top: 2rem;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 0.5rem;
+}
+
+.content-text h2:first-child {
+    margin-top: 0;
+}
+
+.content-text h3 {
+    color: #34495e;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    margin-top: 1.5rem;
+}
+
+.content-text p {
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+}
+
+.content-text ul, .content-text ol {
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    padding-left: 2rem;
+}
+
+.content-text li {
+    margin-bottom: 0.5rem;
+}
+
+.info-box {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.info-box h3 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.info-box ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.info-box li {
+    margin-bottom: 0.5rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .page-header {
+        padding: 3rem 1rem;
+    }
+    
+    .page-header-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .page-header-content p {
+        font-size: 1rem;
+    }
+    
+    .content-section {
+        padding: 1rem;
+    }
+    
+    .content-wrapper {
+        padding: 2rem 1.5rem;
+    }
+    
+    .content-text h2 {
+        font-size: 1.5rem;
+    }
+    
+    .content-text h3 {
+        font-size: 1.3rem;
+    }
+    
+    .content-text p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header {
+        padding: 2rem 1rem;
+    }
+    
+    .page-header-content h1 {
+        font-size: 2rem;
+    }
+    
+    .content-wrapper {
+        padding: 1.5rem 1rem;
+    }
 }
