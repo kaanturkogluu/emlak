@@ -4,16 +4,26 @@ session_start();
 
 require_once __DIR__."/../includes/header.php";
 require_once __DIR__."/../classes/Helper.php";
+require_once __DIR__."/../classes/Database.php";
 
 $helper = Helper::getInstance();
+$db = Database::getInstance()->getConnection();
+
+// Sayfa içeriklerini getir
+$contents = [];
+$stmt = $db->prepare("SELECT section_type, title, subtitle, content, image_url FROM page_contents WHERE page_type = 'kullanim-kosullari'");
+$stmt->execute();
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $contents[$row['section_type']] = $row;
+}
 ?>
 
     <!-- Page Header -->
     <section class="page-header">
         <div class="container">
             <div class="page-header-content">
-                <h1>Kullanım Koşulları</h1>
-                <p>Web sitemizi kullanım şartları ve koşulları</p>
+                <h1><?php echo htmlspecialchars($contents['hero']['title'] ?? 'Kullanım Koşulları'); ?></h1>
+                <p><?php echo htmlspecialchars($contents['hero']['subtitle'] ?? 'Web sitemizi kullanım şartları ve koşulları'); ?></p>
             </div>
         </div>
     </section>
@@ -23,8 +33,20 @@ $helper = Helper::getInstance();
         <div class="container">
             <div class="content-wrapper">
                 <div class="content-text">
-                    <h2>1. Genel Hükümler</h2>
-                    <p>Bu kullanım koşulları, <?php echo $helper->getSiteName(); ?> web sitesini kullanan tüm kullanıcılar için geçerlidir. Web sitemizi kullanarak bu koşulları kabul etmiş sayılırsınız.</p>
+                    <?php if (!empty($contents['main_content']['title'])): ?>
+                        <h2><?php echo htmlspecialchars($contents['main_content']['title']); ?></h2>
+                    <?php endif; ?>
+                    <?php if (!empty($contents['main_content']['subtitle'])): ?>
+                        <p style="font-size: 1.1rem; color: #3498db; margin-bottom: 20px;"><?php echo htmlspecialchars($contents['main_content']['subtitle']); ?></p>
+                    <?php endif; ?>
+                    <?php if (!empty($contents['main_content']['content'])): ?>
+                        <div style="margin-bottom: 30px;">
+                            <?php echo nl2br(htmlspecialchars($contents['main_content']['content'])); ?>
+                        </div>
+                    <?php else: ?>
+                        <h2>1. Genel Hükümler</h2>
+                        <p>Bu kullanım koşulları, <?php echo $helper->getSiteName(); ?> web sitesini kullanan tüm kullanıcılar için geçerlidir. Web sitemizi kullanarak bu koşulları kabul etmiş sayılırsınız.</p>
+                    <?php endif; ?>
 
                     <h2>2. Hizmet Tanımı</h2>
                     <p>Web sitemiz aşağıdaki hizmetleri sunmaktadır:</p>

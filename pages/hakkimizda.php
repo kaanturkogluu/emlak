@@ -4,6 +4,7 @@ session_start();
 
 require_once __DIR__ . "/../config/config.php";
 require_once __DIR__ . "/../classes/Helper.php";
+require_once __DIR__ . "/../classes/Database.php";
 
 $pageTitle = 'Hakkımızda - er.com';
 $pageDescription = 'er.com hakkında bilgi alın. Türkiye\'nin en güvenilir emlak platformu olarak hizmet veriyoruz.';
@@ -11,14 +12,31 @@ $pageKeywords = 'hakkımızda, er.com, emlak, güvenilir, platform';
 
 require_once __DIR__ . "/../includes/header.php";
 $helper = Helper::getInstance();
+$db = Database::getInstance()->getConnection();
+
+// Sayfa içeriklerini getir
+$contents = [];
+$stmt = $db->prepare("SELECT section_type, title, subtitle, content, image_url FROM page_contents WHERE page_type = 'hakkimizda'");
+$stmt->execute();
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $contents[$row['section_type']] = $row;
+}
+
+// Ekip üyelerini getir
+$teamMembers = [];
+$stmt = $db->prepare("SELECT * FROM about_us_team_members WHERE is_active = 1 ORDER BY sort_order ASC, name ASC");
+$stmt->execute();
+$teamMembers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!-- Hakkımızda Hero Section -->
 <section class="page-hero" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 6rem 2rem 4rem; color: white; text-align: center;">
     <div style="max-width: 1200px; margin: 0 auto;">
-        <h1 style="font-size: 3rem; margin-bottom: 1rem; font-weight: 800;">Hakkımızda</h1>
+        <h1 style="font-size: 3rem; margin-bottom: 1rem; font-weight: 800;">
+            <?php echo htmlspecialchars($contents['hero']['title'] ?? 'Hakkımızda'); ?>
+        </h1>
         <p style="font-size: 1.2rem; opacity: 0.9; max-width: 600px; margin: 0 auto;">
-            Türkiye'nin en güvenilir emlak platformu olarak, hayalinizdeki evi bulmanız için yanınızdayız.
+            <?php echo htmlspecialchars($contents['hero']['subtitle'] ?? 'Türkiye\'nin en güvenilir emlak platformu olarak, hayalinizdeki evi bulmanız için yanınızdayız.'); ?>
         </p>
     </div>
 </section>
@@ -28,44 +46,54 @@ $helper = Helper::getInstance();
     <div style="max-width: 1200px; margin: 0 auto;">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; margin-bottom: 4rem;">
             <div>
-                <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem; color: #2c3e50;">Kimiz Biz?</h2>
-                <p style="font-size: 1.1rem; line-height: 1.8; color: #555; margin-bottom: 1.5rem;">
-                    er.com olarak, 2020 yılından bu yana emlak sektöründe faaliyet gösteren, teknoloji odaklı bir platformuz. 
-                    Müşteri memnuniyetini ön planda tutarak, güvenilir ve şeffaf bir emlak deneyimi sunmayı hedefliyoruz.
-                </p>
-                <p style="font-size: 1.1rem; line-height: 1.8; color: #555;">
-                    Binlerce başarılı emlak işlemi gerçekleştirdik ve müşterilerimizin hayallerini gerçeğe dönüştürdük. 
-                    Uzman ekibimiz ve gelişmiş teknoloji altyapımızla, emlak alım-satım sürecinizi kolaylaştırıyoruz.
-                </p>
+                <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem; color: #2c3e50;">
+                    <?php echo htmlspecialchars($contents['main_content']['title'] ?? 'Kimiz Biz?'); ?>
+                </h2>
+                <?php if (!empty($contents['main_content']['subtitle'])): ?>
+                    <p style="font-size: 1.2rem; color: #667eea; margin-bottom: 1.5rem; font-weight: 600;">
+                        <?php echo htmlspecialchars($contents['main_content']['subtitle']); ?>
+                    </p>
+                <?php endif; ?>
+                <div style="font-size: 1.1rem; line-height: 1.8; color: #555;">
+                    <?php echo nl2br(htmlspecialchars($contents['main_content']['content'] ?? 'er.com olarak, 2020 yılından bu yana emlak sektöründe faaliyet gösteren, teknoloji odaklı bir platformuz. Müşteri memnuniyetini ön planda tutarak, güvenilir ve şeffaf bir emlak deneyimi sunmayı hedefliyoruz.')); ?>
+                </div>
             </div>
             <div style="text-align: center;">
-                <img src="<?php echo $helper->asset('images/about-us.jpg'); ?>" 
-                     alt="Hakkımızda" 
-                     style="width: 100%; max-width: 500px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);"
-                     onerror="this.src='https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=500&h=400&fit=crop'">
+                <?php if (!empty($contents['main_content']['image_url'])): ?>
+                    <img src="<?php echo htmlspecialchars($contents['main_content']['image_url']); ?>" 
+                         alt="<?php echo htmlspecialchars($contents['main_content']['title'] ?? 'Hakkımızda'); ?>" 
+                         style="width: 100%; max-width: 500px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <?php else: ?>
+                    <img src="<?php echo $helper->asset('images/about-us.jpg'); ?>" 
+                         alt="Hakkımızda" 
+                         style="width: 100%; max-width: 500px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);"
+                         onerror="this.src='https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=500&h=400&fit=crop'">
+                <?php endif; ?>
             </div>
         </div>
 
         <!-- Misyonumuz -->
         <div style="background: white; padding: 3rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 3rem;">
-            <h3 style="font-size: 2rem; margin-bottom: 1.5rem; color: #2c3e50; text-align: center;">Misyonumuz</h3>
+            <h3 style="font-size: 2rem; margin-bottom: 1.5rem; color: #2c3e50; text-align: center;">
+                <?php echo htmlspecialchars($contents['mission']['title'] ?? 'Misyonumuz'); ?>
+            </h3>
             <p style="font-size: 1.1rem; line-height: 1.8; color: #555; text-align: center; max-width: 800px; margin: 0 auto;">
-                Emlak sektöründe güven, şeffaflık ve müşteri memnuniyetini ön planda tutarak, 
-                teknoloji ile geleneksel emlak hizmetlerini harmanlayan, yenilikçi çözümler sunmak.
+                <?php echo htmlspecialchars($contents['mission']['content'] ?? 'Emlak sektöründe güven, şeffaflık ve müşteri memnuniyetini ön planda tutarak, teknoloji ile geleneksel emlak hizmetlerini harmanlayan, yenilikçi çözümler sunmak.'); ?>
             </p>
         </div>
 
         <!-- Vizyonumuz -->
         <div style="background: white; padding: 3rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 3rem;">
-            <h3 style="font-size: 2rem; margin-bottom: 1.5rem; color: #2c3e50; text-align: center;">Vizyonumuz</h3>
+            <h3 style="font-size: 2rem; margin-bottom: 1.5rem; color: #2c3e50; text-align: center;">
+                <?php echo htmlspecialchars($contents['vision']['title'] ?? 'Vizyonumuz'); ?>
+            </h3>
             <p style="font-size: 1.1rem; line-height: 1.8; color: #555; text-align: center; max-width: 800px; margin: 0 auto;">
-                Türkiye'nin en büyük ve en güvenilir emlak platformu olmak, 
-                müşterilerimizin hayallerini gerçeğe dönüştüren bir marka haline gelmek.
+                <?php echo htmlspecialchars($contents['vision']['content'] ?? 'Türkiye\'nin en büyük ve en güvenilir emlak platformu olmak, müşterilerimizin hayallerini gerçeğe dönüştüren bir marka haline gelmek.'); ?>
             </p>
         </div>
 
         <!-- Değerlerimiz -->
-        <div style="background: white; padding: 3rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);">
+        <!-- <div style="background: white; padding: 3rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);">
             <h3 style="font-size: 2rem; margin-bottom: 2rem; color: #2c3e50; text-align: center;">Değerlerimiz</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
                 <div style="text-align: center; padding: 1.5rem;">
@@ -97,12 +125,12 @@ $helper = Helper::getInstance();
                     <p style="color: #555; line-height: 1.6;">Tüm işlemlerimizde etik değerlere uygun davranırız.</p>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </section>
 
 <!-- İstatistikler -->
-<section style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 4rem 2rem; color: white;">
+<!-- <section style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 4rem 2rem; color: white;">
     <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
         <h2 style="font-size: 2.5rem; margin-bottom: 3rem; font-weight: 800;">Rakamlarla er.com</h2>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
@@ -128,41 +156,41 @@ $helper = Helper::getInstance();
             </div>
         </div>
     </div>
-</section>
+</section> -->
 
 <!-- Ekibimiz -->
 <section style="padding: 4rem 2rem; background: #f8f9fa;">
     <div style="max-width: 1200px; margin: 0 auto;">
-        <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: #2c3e50; text-align: center;">Ekibimiz</h2>
-        <p style="font-size: 1.1rem; color: #555; text-align: center; margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto;">
-            Deneyimli ve uzman ekibimizle, emlak sektöründe fark yaratıyoruz.
-        </p>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
-            <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;">
-                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" 
-                     alt="Ahmet Yılmaz" 
-                     style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 1rem; object-fit: cover;">
-                <h4 style="font-size: 1.3rem; margin-bottom: 0.5rem; color: #2c3e50;">Ahmet Yılmaz</h4>
-                <p style="color: #667eea; font-weight: 600; margin-bottom: 1rem;">Genel Müdür</p>
-                <p style="color: #555; line-height: 1.6;">15 yıllık emlak deneyimi ile sektörde öncü isimlerden biri.</p>
+        <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: #2c3e50; text-align: center;">
+            <?php echo htmlspecialchars($contents['team']['title'] ?? 'Ekibimiz'); ?>
+        </h2>
+        <?php if (!empty($contents['team']['subtitle'])): ?>
+            <p style="font-size: 1.1rem; color: #555; text-align: center; margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                <?php echo htmlspecialchars($contents['team']['subtitle']); ?>
+            </p>
+        <?php endif; ?>
+        
+        <?php if (!empty($teamMembers)): ?>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                <?php foreach ($teamMembers as $member): ?>
+                    <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;">
+                        <img src="<?php echo htmlspecialchars($member['image_url'] ?: 'https://via.placeholder.com/120x120?text=No+Image'); ?>" 
+                             alt="<?php echo htmlspecialchars($member['name']); ?>" 
+                             style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 1rem; object-fit: cover;">
+                        <h4 style="font-size: 1.3rem; margin-bottom: 0.5rem; color: #2c3e50;"><?php echo htmlspecialchars($member['name']); ?></h4>
+                        <p style="color: #667eea; font-weight: 600; margin-bottom: 1rem;"><?php echo htmlspecialchars($member['position']); ?></p>
+                        <?php if (!empty($member['description'])): ?>
+                            <p style="color: #555; line-height: 1.6;"><?php echo htmlspecialchars($member['description']); ?></p>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
             </div>
-            <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;">
-                <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face" 
-                     alt="Ayşe Demir" 
-                     style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 1rem; object-fit: cover;">
-                <h4 style="font-size: 1.3rem; margin-bottom: 0.5rem; color: #2c3e50;">Ayşe Demir</h4>
-                <p style="color: #667eea; font-weight: 600; margin-bottom: 1rem;">Satış Müdürü</p>
-                <p style="color: #555; line-height: 1.6;">Müşteri ilişkileri ve satış stratejileri konusunda uzman.</p>
+        <?php else: ?>
+            <div style="text-align: center; padding: 3rem; color: #666;">
+                <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                <p style="font-size: 1.1rem;">Henüz ekip üyesi eklenmemiş.</p>
             </div>
-            <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;">
-                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" 
-                     alt="Mehmet Kaya" 
-                     style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 1rem; object-fit: cover;">
-                <h4 style="font-size: 1.3rem; margin-bottom: 0.5rem; color: #2c3e50;">Mehmet Kaya</h4>
-                <p style="color: #667eea; font-weight: 600; margin-bottom: 1rem;">Teknik Müdür</p>
-                <p style="color: #555; line-height: 1.6;">Teknoloji altyapısı ve dijital çözümler konusunda uzman.</p>
-            </div>
-        </div>
+        <?php endif; ?>
     </div>
 </section>
 

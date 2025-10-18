@@ -4,16 +4,26 @@ session_start();
 
 require_once __DIR__."/../includes/header.php";
 require_once __DIR__."/../classes/Helper.php";
+require_once __DIR__."/../classes/Database.php";
 
 $helper = Helper::getInstance();
+$db = Database::getInstance()->getConnection();
+
+// Sayfa içeriklerini getir
+$contents = [];
+$stmt = $db->prepare("SELECT section_type, title, subtitle, content, image_url FROM page_contents WHERE page_type = 'kvkk'");
+$stmt->execute();
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $contents[$row['section_type']] = $row;
+}
 ?>
 
     <!-- Page Header -->
     <section class="page-header">
         <div class="container">
             <div class="page-header-content">
-                <h1>KVKK Aydınlatma Metni</h1>
-                <p>Kişisel Verilerin Korunması Kanunu kapsamında bilgilendirme</p>
+                <h1><?php echo htmlspecialchars($contents['hero']['title'] ?? 'KVKK Aydınlatma Metni'); ?></h1>
+                <p><?php echo htmlspecialchars($contents['hero']['subtitle'] ?? 'Kişisel Verilerin Korunması Kanunu kapsamında bilgilendirme'); ?></p>
             </div>
         </div>
     </section>
@@ -23,8 +33,20 @@ $helper = Helper::getInstance();
         <div class="container">
             <div class="content-wrapper">
                 <div class="content-text">
-                    <h2>1. Veri Sorumlusu</h2>
-                    <p>6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") kapsamında veri sorumlusu sıfatıyla, kişisel verileriniz aşağıda açıklanan kapsamda işlenmektedir.</p>
+                    <?php if (!empty($contents['main_content']['title'])): ?>
+                        <h2><?php echo htmlspecialchars($contents['main_content']['title']); ?></h2>
+                    <?php endif; ?>
+                    <?php if (!empty($contents['main_content']['subtitle'])): ?>
+                        <p style="font-size: 1.1rem; color: #3498db; margin-bottom: 20px;"><?php echo htmlspecialchars($contents['main_content']['subtitle']); ?></p>
+                    <?php endif; ?>
+                    <?php if (!empty($contents['main_content']['content'])): ?>
+                        <div style="margin-bottom: 30px;">
+                            <?php echo nl2br(htmlspecialchars($contents['main_content']['content'])); ?>
+                        </div>
+                    <?php else: ?>
+                        <h2>1. Veri Sorumlusu</h2>
+                        <p>6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") kapsamında veri sorumlusu sıfatıyla, kişisel verileriniz aşağıda açıklanan kapsamda işlenmektedir.</p>
+                    <?php endif; ?>
                     
                     <div class="info-box">
                         <h3>Veri Sorumlusu Bilgileri:</h3>
@@ -36,8 +58,17 @@ $helper = Helper::getInstance();
                         </ul>
                     </div>
 
-                    <h2>2. İşlenen Kişisel Veriler</h2>
-                    <p>Web sitemizi kullanırken aşağıdaki kişisel verileriniz işlenmektedir:</p>
+                    <?php if (!empty($contents['data_collection']['title'])): ?>
+                        <h2><?php echo htmlspecialchars($contents['data_collection']['title']); ?></h2>
+                        <?php if (!empty($contents['data_collection']['content'])): ?>
+                            <div style="margin-bottom: 30px;">
+                                <?php echo nl2br(htmlspecialchars($contents['data_collection']['content'])); ?>
+                            </div>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <h2>2. İşlenen Kişisel Veriler</h2>
+                        <p>Web sitemizi kullanırken aşağıdaki kişisel verileriniz işlenmektedir:</p>
+                    <?php endif; ?>
                     
                     <h3>2.1. Kimlik Verileri</h3>
                     <ul>
@@ -62,8 +93,17 @@ $helper = Helper::getInstance();
                         <li>Arama tercihleri</li>
                     </ul>
 
-                    <h2>3. Kişisel Verilerin İşlenme Amaçları</h2>
-                    <p>Kişisel verileriniz aşağıdaki amaçlarla işlenmektedir:</p>
+                    <?php if (!empty($contents['data_usage']['title'])): ?>
+                        <h2><?php echo htmlspecialchars($contents['data_usage']['title']); ?></h2>
+                        <?php if (!empty($contents['data_usage']['content'])): ?>
+                            <div style="margin-bottom: 30px;">
+                                <?php echo nl2br(htmlspecialchars($contents['data_usage']['content'])); ?>
+                            </div>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <h2>3. Kişisel Verilerin İşlenme Amaçları</h2>
+                        <p>Kişisel verileriniz aşağıdaki amaçlarla işlenmektedir:</p>
+                    <?php endif; ?>
                     <ul>
                         <li>Web sitesi hizmetlerinin sunulması</li>
                         <li>Emlak ilanlarının filtrelenmesi ve kişiselleştirilmesi</li>
@@ -99,8 +139,17 @@ $helper = Helper::getInstance();
                         <li><strong>Çerez verileri:</strong> Çerez türüne göre değişken</li>
                     </ul>
 
-                    <h2>7. Veri Güvenliği</h2>
-                    <p>Kişisel verilerinizin güvenliğini sağlamak için aşağıdaki teknik ve idari tedbirleri almaktayız:</p>
+                    <?php if (!empty($contents['data_protection']['title'])): ?>
+                        <h2><?php echo htmlspecialchars($contents['data_protection']['title']); ?></h2>
+                        <?php if (!empty($contents['data_protection']['content'])): ?>
+                            <div style="margin-bottom: 30px;">
+                                <?php echo nl2br(htmlspecialchars($contents['data_protection']['content'])); ?>
+                            </div>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <h2>7. Veri Güvenliği</h2>
+                        <p>Kişisel verilerinizin güvenliğini sağlamak için aşağıdaki teknik ve idari tedbirleri almaktayız:</p>
+                    <?php endif; ?>
                     <ul>
                         <li>SSL şifreleme protokolü kullanımı</li>
                         <li>Güvenli sunucu altyapısı</li>
@@ -110,8 +159,17 @@ $helper = Helper::getInstance();
                         <li>Personel eğitimleri</li>
                     </ul>
 
-                    <h2>8. Veri Sahibinin Hakları</h2>
-                    <p>KVKK'nın 11. maddesi uyarınca aşağıdaki haklara sahipsiniz:</p>
+                    <?php if (!empty($contents['user_rights']['title'])): ?>
+                        <h2><?php echo htmlspecialchars($contents['user_rights']['title']); ?></h2>
+                        <?php if (!empty($contents['user_rights']['content'])): ?>
+                            <div style="margin-bottom: 30px;">
+                                <?php echo nl2br(htmlspecialchars($contents['user_rights']['content'])); ?>
+                            </div>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <h2>8. Veri Sahibinin Hakları</h2>
+                        <p>KVKK'nın 11. maddesi uyarınca aşağıdaki haklara sahipsiniz:</p>
+                    <?php endif; ?>
                     <ul>
                         <li>Kişisel verilerinizin işlenip işlenmediğini öğrenme</li>
                         <li>İşlenen kişisel verileriniz hakkında bilgi talep etme</li>
@@ -124,8 +182,17 @@ $helper = Helper::getInstance();
                         <li>Kişisel verilerin kanuna aykırı olarak işlenmesi sebebiyle zarara uğraması hâlinde zararın giderilmesini talep etme</li>
                     </ul>
 
-                    <h2>9. Başvuru Yöntemleri</h2>
-                    <p>Yukarıda belirtilen haklarınızı kullanmak için aşağıdaki yöntemlerle başvuruda bulunabilirsiniz:</p>
+                    <?php if (!empty($contents['contact_info']['title'])): ?>
+                        <h2><?php echo htmlspecialchars($contents['contact_info']['title']); ?></h2>
+                        <?php if (!empty($contents['contact_info']['content'])): ?>
+                            <div style="margin-bottom: 30px;">
+                                <?php echo nl2br(htmlspecialchars($contents['contact_info']['content'])); ?>
+                            </div>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <h2>9. Başvuru Yöntemleri</h2>
+                        <p>Yukarıda belirtilen haklarınızı kullanmak için aşağıdaki yöntemlerle başvuruda bulunabilirsiniz:</p>
+                    <?php endif; ?>
                     
                     <div class="contact-box">
                         <h3>İletişim Bilgileri:</h3>

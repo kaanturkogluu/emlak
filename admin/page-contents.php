@@ -26,35 +26,28 @@ $pageTypes = [
         'description' => 'Şirket bilgileri, misyon, vizyon ve değerler',
         'icon' => 'fas fa-info-circle',
         'color' => 'blue',
-        'url' => 'page-edit.php?type=hakkimizda'
-    ],
-    'iletisim' => [
-        'name' => 'İletişim',
-        'description' => 'İletişim bilgileri ve form ayarları',
-        'icon' => 'fas fa-envelope',
-        'color' => 'green',
-        'url' => 'page-edit.php?type=iletisim'
+        'url' => 'page-edit-hakkimizda.php'
     ],
     'kvkk' => [
         'name' => 'KVKK',
         'description' => 'Kişisel Verilerin Korunması Kanunu',
         'icon' => 'fas fa-shield-alt',
         'color' => 'red',
-        'url' => 'page-edit.php?type=kvkk'
+        'url' => 'page-edit-kvkk.php'
     ],
     'kullanim-kosullari' => [
         'name' => 'Kullanım Koşulları',
         'description' => 'Site kullanım şartları ve kuralları',
         'icon' => 'fas fa-file-contract',
         'color' => 'orange',
-        'url' => 'page-edit.php?type=kullanim-kosullari'
+        'url' => 'page-edit-kullanim-kosullari.php'
     ],
     'gizlilik-politikasi' => [
         'name' => 'Gizlilik Politikası',
         'description' => 'Gizlilik ve veri koruma politikaları',
         'icon' => 'fas fa-user-secret',
         'color' => 'purple',
-        'url' => 'page-edit.php?type=gizlilik-politikasi'
+        'url' => 'page-edit-gizlilik-politikasi.php'
     ]
 ];
 
@@ -177,24 +170,6 @@ require_once __DIR__ . '/layout/header.php';
         <?php endforeach; ?>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="mt-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Hızlı İşlemler</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <a href="page-edit.php?type=hakkimizda" class="flex items-center space-x-3 p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
-                <i class="fas fa-info-circle text-blue-500"></i>
-                <span class="text-blue-700 font-medium">Hakkımızda Düzenle</span>
-            </a>
-            <a href="page-edit.php?type=iletisim" class="flex items-center space-x-3 p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
-                <i class="fas fa-envelope text-green-500"></i>
-                <span class="text-green-700 font-medium">İletişim Düzenle</span>
-            </a>
-            <a href="page-edit.php?type=kvkk" class="flex items-center space-x-3 p-4 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
-                <i class="fas fa-shield-alt text-red-500"></i>
-                <span class="text-red-700 font-medium">KVKK Düzenle</span>
-            </a>
-        </div>
-    </div>
 </div>
 
 <style>

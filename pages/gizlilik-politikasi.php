@@ -4,16 +4,26 @@ session_start();
 
 require_once __DIR__."/../includes/header.php";
 require_once __DIR__."/../classes/Helper.php";
+require_once __DIR__."/../classes/Database.php";
 
 $helper = Helper::getInstance();
+$db = Database::getInstance()->getConnection();
+
+// Sayfa içeriklerini getir
+$contents = [];
+$stmt = $db->prepare("SELECT section_type, title, subtitle, content, image_url FROM page_contents WHERE page_type = 'gizlilik-politikasi'");
+$stmt->execute();
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $contents[$row['section_type']] = $row;
+}
 ?>
 
     <!-- Page Header -->
     <section class="page-header">
         <div class="container">
             <div class="page-header-content">
-                <h1>Gizlilik Politikası</h1>
-                <p>Kişisel verilerinizin korunması bizim için önemlidir</p>
+                <h1><?php echo htmlspecialchars($contents['hero']['title'] ?? 'Gizlilik Politikası'); ?></h1>
+                <p><?php echo htmlspecialchars($contents['hero']['subtitle'] ?? 'Kişisel verilerinizin korunması bizim için önemlidir'); ?></p>
             </div>
         </div>
     </section>
@@ -23,8 +33,20 @@ $helper = Helper::getInstance();
         <div class="container">
             <div class="content-wrapper">
                 <div class="content-text">
-                    <h2>1. Giriş</h2>
-                    <p>Bu gizlilik politikası, <?php echo $helper->getSiteName(); ?> web sitesini ziyaret ettiğinizde kişisel bilgilerinizin nasıl toplandığını, kullanıldığını ve korunduğunu açıklamaktadır.</p>
+                    <?php if (!empty($contents['main_content']['title'])): ?>
+                        <h2><?php echo htmlspecialchars($contents['main_content']['title']); ?></h2>
+                    <?php endif; ?>
+                    <?php if (!empty($contents['main_content']['subtitle'])): ?>
+                        <p style="font-size: 1.1rem; color: #3498db; margin-bottom: 20px;"><?php echo htmlspecialchars($contents['main_content']['subtitle']); ?></p>
+                    <?php endif; ?>
+                    <?php if (!empty($contents['main_content']['content'])): ?>
+                        <div style="margin-bottom: 30px;">
+                            <?php echo nl2br(htmlspecialchars($contents['main_content']['content'])); ?>
+                        </div>
+                    <?php else: ?>
+                        <h2>1. Giriş</h2>
+                        <p>Bu gizlilik politikası, <?php echo $helper->getSiteName(); ?> web sitesini ziyaret ettiğinizde kişisel bilgilerinizin nasıl toplandığını, kullanıldığını ve korunduğunu açıklamaktadır.</p>
+                    <?php endif; ?>
 
                     <h2>2. Toplanan Bilgiler</h2>
                     <p>Web sitemizi kullanırken aşağıdaki bilgileri toplayabiliriz:</p>
