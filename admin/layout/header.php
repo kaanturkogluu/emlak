@@ -71,6 +71,7 @@ $helper = Helper::getInstance();
             display: flex;
             align-items: center;
             justify-content: space-between;
+            position: relative;
         }
         
         .sidebar-header h2 {
@@ -81,6 +82,26 @@ $helper = Helper::getInstance();
         
         .sidebar.collapsed .sidebar-header h2 {
             opacity: 0;
+        }
+        
+        /* Daraltılmış menüde toggle butonunun görünür olması */
+        .sidebar.collapsed .toggle-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .sidebar.collapsed .toggle-btn:hover {
+            background: rgba(255,255,255,0.2);
         }
         
         .toggle-btn {
@@ -143,14 +164,19 @@ $helper = Helper::getInstance();
             margin-right: 0;
         }
         
+        /* Toggle buton ikonu değişimi */
+        .sidebar.collapsed .toggle-btn i {
+            transform: rotate(180deg);
+        }
+        
         /* Main Content */
-        .main-content {
+        .main-content, #mainContent {
             margin-left: 250px;
             transition: margin-left 0.3s ease;
             min-height: 100vh;
         }
         
-        .main-content.expanded {
+        .main-content.expanded, #mainContent.expanded {
             margin-left: 70px;
         }
         
@@ -498,7 +524,7 @@ $helper = Helper::getInstance();
                 width: 24px;
             }
             
-            .main-content {
+            .main-content, #mainContent {
                 margin-left: 0;
             }
             

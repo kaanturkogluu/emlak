@@ -6,9 +6,21 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const mainContent = document.getElementById('mainContent');
+            const toggleIcon = document.querySelector('.toggle-btn i');
             
-            sidebar.classList.toggle('collapsed');
-            mainContent.classList.toggle('expanded');
+            if (sidebar && mainContent) {
+                sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('expanded');
+                
+                // İkonu değiştir
+                if (toggleIcon) {
+                    if (sidebar.classList.contains('collapsed')) {
+                        toggleIcon.className = 'fas fa-chevron-right';
+                    } else {
+                        toggleIcon.className = 'fas fa-bars';
+                    }
+                }
+            }
         }
         
         function toggleMobileSidebar() {
