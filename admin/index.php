@@ -108,7 +108,7 @@ require_once __DIR__ . '/layout/header.php';
 </div>
 
 <!-- Recent Content -->
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+<div class="recent-content" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
     <!-- Son İlanlar -->
     <div class="recent-properties" style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -208,17 +208,148 @@ require_once __DIR__ . '/layout/header.php';
 </div>
 
 <style>
+/* Mobile Responsive Styles for Dashboard */
 @media (max-width: 768px) {
     .stats-grid {
         grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .stat-card {
+        padding: 20px !important;
+    }
+    
+    .stat-card h3 {
+        font-size: 1rem !important;
+    }
+    
+    .stat-card div:first-child {
+        font-size: 2rem !important;
+    }
+    
+    .stat-card div:last-child {
+        font-size: 1.5rem !important;
     }
     
     .quick-actions div {
         grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .quick-actions .btn {
+        padding: 15px !important;
+        font-size: 0.9rem;
+    }
+    
+    .quick-actions .btn i {
+        font-size: 1.5rem !important;
+        margin-bottom: 8px !important;
     }
     
     .recent-content {
         grid-template-columns: 1fr !important;
+        gap: 20px !important;
+        display: grid !important;
+    }
+    
+    .recent-properties,
+    .recent-sliders {
+        padding: 20px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .recent-properties h3,
+    .recent-sliders h3 {
+        font-size: 1.1rem !important;
+    }
+    
+    .recent-properties .btn,
+    .recent-sliders .btn {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+    
+    .system-info {
+        padding: 20px !important;
+    }
+    
+    .system-info h3 {
+        font-size: 1.1rem !important;
+    }
+    
+    .system-info div {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        gap: 12px;
+    }
+    
+    .stat-card {
+        padding: 15px !important;
+    }
+    
+    .stat-card h3 {
+        font-size: 0.9rem !important;
+    }
+    
+    .stat-card div:first-child {
+        font-size: 1.8rem !important;
+    }
+    
+    .stat-card div:last-child {
+        font-size: 1.3rem !important;
+    }
+    
+    .quick-actions {
+        padding: 20px !important;
+    }
+    
+    .quick-actions h3 {
+        font-size: 1.2rem !important;
+    }
+    
+    .quick-actions .btn {
+        padding: 12px !important;
+        font-size: 0.85rem;
+    }
+    
+    .quick-actions .btn i {
+        font-size: 1.3rem !important;
+        margin-bottom: 6px !important;
+    }
+    
+    .recent-content {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+        display: grid !important;
+    }
+    
+    .recent-properties,
+    .recent-sliders {
+        padding: 15px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .recent-properties h3,
+    .recent-sliders h3 {
+        font-size: 1rem !important;
+    }
+    
+    .system-info {
+        padding: 15px !important;
+    }
+    
+    .system-info h3 {
+        font-size: 1rem !important;
+    }
+    
+    .system-info div {
+        font-size: 0.85rem;
     }
 }
 </style>

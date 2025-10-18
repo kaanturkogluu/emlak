@@ -57,6 +57,8 @@ $helper = Helper::getInstance();
             color: white;
             transition: all 0.3s ease;
             z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
         
         .sidebar.collapsed {
@@ -107,18 +109,25 @@ $helper = Helper::getInstance();
             text-decoration: none;
             transition: all 0.3s ease;
             border-left: 3px solid transparent;
+            position: relative;
         }
         
         .menu-item:hover,
         .menu-item.active {
             background: rgba(255,255,255,0.1);
             border-left-color: white;
+            transform: translateX(5px);
         }
         
         .menu-item i {
             width: 20px;
             margin-right: 10px;
             text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .menu-item span {
+            font-weight: 500;
         }
         
         .sidebar.collapsed .menu-item span {
@@ -420,63 +429,23 @@ $helper = Helper::getInstance();
             font-size: 1.5rem;
         }
         
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            
-            .sidebar.mobile-open {
-                transform: translateX(0);
-            }
-            
-            .main-content {
-                margin-left: 0;
-            }
-            
-            .top-bar {
-                padding: 15px 20px;
-            }
-            
-            .content {
-                padding: 20px;
-            }
-            
-            .form-container {
-                padding: 20px;
-            }
-            
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .action-bar {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
-            }
-            
-            .table {
-                font-size: 0.9rem;
-            }
-            
-            .table th,
-            .table td {
-                padding: 15px 10px;
-            }
-            
-            .mobile-menu-btn {
-                display: block;
-                background: none;
-                border: none;
-                font-size: 1.2rem;
-                color: #2c3e50;
-                cursor: pointer;
-            }
-        }
-        
+        /* Mobile Menu Button */
         .mobile-menu-btn {
             display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #2c3e50;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            margin-right: 15px;
+        }
+        
+        .mobile-menu-btn:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
         }
         
         /* Overlay for mobile */
@@ -489,10 +458,173 @@ $helper = Helper::getInstance();
             height: 100%;
             background: rgba(0,0,0,0.5);
             z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
         
         .sidebar-overlay.active {
             display: block;
+            opacity: 1;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                width: 280px;
+                box-shadow: 2px 0 20px rgba(0,0,0,0.3);
+            }
+            
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .sidebar-header {
+                padding: 15px 20px;
+            }
+            
+            .sidebar-header h2 {
+                font-size: 1.1rem;
+            }
+            
+            .menu-item {
+                padding: 18px 20px;
+                font-size: 1rem;
+            }
+            
+            .menu-item i {
+                font-size: 1.2rem;
+                width: 24px;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .top-bar {
+                padding: 15px 20px;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            
+            .top-bar h1 {
+                font-size: 1.2rem;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+            
+            .form-container {
+                padding: 20px;
+                margin: 0;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .action-bar {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+                padding: 15px;
+            }
+            
+            .action-bar h3 {
+                font-size: 1.2rem;
+            }
+            
+            .table {
+                font-size: 0.85rem;
+                overflow-x: auto;
+                display: block;
+                white-space: nowrap;
+            }
+            
+            .table th,
+            .table td {
+                padding: 12px 8px;
+                min-width: 120px;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .user-info {
+                gap: 10px;
+            }
+            
+            .user-info span {
+                display: none;
+            }
+            
+            .logout-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .btn {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+            
+            .btn-sm {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .top-bar {
+                padding: 12px 15px;
+            }
+            
+            .top-bar h1 {
+                font-size: 1.1rem;
+            }
+            
+            .content {
+                padding: 10px;
+            }
+            
+            .form-container {
+                padding: 15px;
+            }
+            
+            .action-bar {
+                padding: 12px;
+            }
+            
+            .action-bar h3 {
+                font-size: 1.1rem;
+            }
+            
+            .table th,
+            .table td {
+                padding: 10px 6px;
+                font-size: 0.8rem;
+            }
+            
+            .mobile-menu-btn {
+                font-size: 1.3rem;
+                padding: 6px;
+            }
+            
+            .user-avatar {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+            
+            .logout-btn {
+                padding: 5px 10px;
+                font-size: 0.75rem;
+            }
         }
     </style>
 </head>
@@ -544,7 +676,7 @@ $helper = Helper::getInstance();
     <div class="main-content" id="mainContent">
         <!-- Top Bar -->
         <div class="top-bar">
-            <div>
+            <div style="display: flex; align-items: center;">
                 <button class="mobile-menu-btn" onclick="toggleMobileSidebar()">
                     <i class="fas fa-bars"></i>
                 </button>

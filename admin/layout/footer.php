@@ -14,9 +14,17 @@
         function toggleMobileSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
+            const body = document.body;
             
             sidebar.classList.toggle('mobile-open');
             overlay.classList.toggle('active');
+            
+            // Prevent body scroll when sidebar is open
+            if (sidebar.classList.contains('mobile-open')) {
+                body.style.overflow = 'hidden';
+            } else {
+                body.style.overflow = '';
+            }
         }
         
         // Close sidebar when clicking overlay
@@ -28,7 +36,9 @@
         document.querySelectorAll('.menu-item').forEach(item => {
             item.addEventListener('click', function() {
                 if (window.innerWidth <= 768) {
-                    toggleMobileSidebar();
+                    setTimeout(() => {
+                        toggleMobileSidebar();
+                    }, 100); // Small delay for better UX
                 }
             });
         });
@@ -36,9 +46,29 @@
         // Handle window resize
         window.addEventListener('resize', function() {
             if (window.innerWidth > 768) {
-                document.getElementById('sidebar').classList.remove('mobile-open');
-                document.getElementById('sidebarOverlay').classList.remove('active');
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('sidebarOverlay');
+                const body = document.body;
+                
+                sidebar.classList.remove('mobile-open');
+                overlay.classList.remove('active');
+                body.style.overflow = '';
             }
+        });
+        
+        // Close sidebar on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar.classList.contains('mobile-open')) {
+                    toggleMobileSidebar();
+                }
+            }
+        });
+        
+        // Prevent sidebar from closing when clicking inside it
+        document.getElementById('sidebar').addEventListener('click', function(e) {
+            e.stopPropagation();
         });
         
         // İlçe yükleme fonksiyonu
