@@ -129,3 +129,86 @@ $helper = Helper::getInstance();
             </nav>
         </div>
     </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay">
+        <div class="mobile-menu-content">
+            <div class="mobile-menu-header">
+                <div class="mobile-logo">
+                    <img src="https://placehold.co/200x60/3b6cb6/white?text=1class.com&font=roboto" alt="1class.com Logo">
+                </div>
+                <div class="mobile-menu-close">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            
+            <div class="mobile-menu-links">
+                <div class="mobile-menu-section">
+                    <h3>İlanlar</h3>
+                    <ul>
+                        <li><a href="<?php echo $helper->url('ilanlar'); ?>"><i class="fas fa-list"></i> Tüm İlanlar</a></li>
+                        <li><a href="<?php echo $helper->url('ilanlar', ['transaction_type' => 'satilik']); ?>"><i class="fas fa-home"></i> Satılık İlanlar</a></li>
+                        <li><a href="<?php echo $helper->url('ilanlar', ['transaction_type' => 'kiralik']); ?>"><i class="fas fa-key"></i> Kiralık İlanlar</a></li>
+                        <li><a href="<?php echo $helper->url('arama'); ?>"><i class="fas fa-search"></i> İlan Ara</a></li>
+                    </ul>
+                </div>
+
+                <div class="mobile-menu-section">
+                    <h3>Satılık</h3>
+                    <ul>
+                        <li><a href="<?php echo $helper->url('ilanlar', ['transaction_type' => 'satilik', 'property_type' => 'daire']); ?>"><i class="fas fa-home"></i> Satılık Daire</a></li>
+                        <li><a href="<?php echo $helper->url('ilanlar', ['transaction_type' => 'satilik', 'property_type' => 'villa']); ?>"><i class="fas fa-home-lg-alt"></i> Satılık Villa</a></li>
+                        <li><a href="<?php echo $helper->url('ilanlar', ['transaction_type' => 'satilik', 'property_type' => 'arsa']); ?>"><i class="fas fa-mountain"></i> Satılık Arsa</a></li>
+                        <li><a href="<?php echo $helper->url('ilanlar', ['transaction_type' => 'satilik', 'property_type' => 'isyeri']); ?>"><i class="fas fa-store"></i> Satılık İşyeri</a></li>
+                    </ul>
+                </div>
+
+                <div class="mobile-menu-section">
+                    <h3>Kiralık</h3>
+                    <ul>
+                        <li><a href="<?php echo $helper->url('ilanlar', ['transaction_type' => 'kiralik', 'property_type' => 'daire']); ?>"><i class="fas fa-home"></i> Kiralık Daire</a></li>
+                        <li><a href="<?php echo $helper->url('ilanlar', ['transaction_type' => 'kiralik', 'property_type' => 'villa']); ?>"><i class="fas fa-home-lg-alt"></i> Kiralık Villa</a></li>
+                        <li><a href="<?php echo $helper->url('ilanlar', ['transaction_type' => 'kiralik', 'property_type' => 'isyeri']); ?>"><i class="fas fa-store"></i> Kiralık İşyeri</a></li>
+                        <li><a href="<?php echo $helper->url('ilanlar', ['transaction_type' => 'kiralik', 'property_type' => 'ofis']); ?>"><i class="fas fa-building"></i> Kiralık Ofis</a></li>
+                    </ul>
+                </div>
+
+                <div class="mobile-menu-section">
+                    <h3>Diğer</h3>
+                    <ul>
+                        <li><a href="<?php echo $helper->url('ilanlar', ['transaction_type' => 'gunluk-kiralik']); ?>"><i class="fas fa-calendar-day"></i> Günlük Kiralık</a></li>
+                    </ul>
+                </div>
+
+                <div class="mobile-menu-section">
+                    <h3>Kurumsal</h3>
+                    <ul>
+                        <li><a href="<?php echo $helper->url('hakkimizda'); ?>"><i class="fas fa-info-circle"></i> Hakkımızda</a></li>
+                        <li><a href="<?php echo $helper->url('iletisim'); ?>"><i class="fas fa-envelope"></i> İletişim</a></li>
+                        <li><a href="<?php echo $helper->url('gizlilik-politikasi'); ?>"><i class="fas fa-shield-alt"></i> Gizlilik Politikası</a></li>
+                        <li><a href="<?php echo $helper->url('kullanim-kosullari'); ?>"><i class="fas fa-file-contract"></i> Kullanım Koşulları</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mobile-menu-footer">
+                <div class="mobile-contact-info">
+                    <div class="mobile-contact-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <span><?php echo $helper->getSetting('contact_phone', '+90 (212) 555 00 00'); ?></span>
+                    </div>
+                    <div class="mobile-contact-item">
+                        <i class="far fa-envelope"></i>
+                        <span><?php echo $helper->getSetting('contact_email', 'info@emlaksitesi.com'); ?></span>
+                    </div>
+                </div>
+                <div class="mobile-social-links">
+                    <a href="<?php echo $helper->getSetting('facebook_url', '#'); ?>" class="mobile-social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="<?php echo $helper->getSetting('twitter_url', '#'); ?>" class="mobile-social-icon" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="<?php echo $helper->getSetting('instagram_url', '#'); ?>" class="mobile-social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="<?php echo $helper->getSetting('linkedin_url', '#'); ?>" class="mobile-social-icon" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="<?php echo $helper->getSetting('youtube_url', '#'); ?>" class="mobile-social-icon" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>

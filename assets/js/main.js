@@ -1,19 +1,23 @@
 
-// Header Scroll Effect
-window.addEventListener('scroll', () => {
-    const header = document.querySelector('header');
-    const topBar = document.querySelector('.top-bar');
-    if (window.scrollY > 40) {
-        header.classList.add('scrolled');
-        topBar.style.display = 'none';
-    } else {
-        header.classList.remove('scrolled');
-        topBar.style.display = 'block';
-    }
-});
+// Wrap everything in IIFE to prevent variable conflicts
+(function() {
+    'use strict';
 
-// Slider Functionality with Creative Transitions
-let currentSlideIndex = 0;
+    // Header Scroll Effect
+    window.addEventListener('scroll', () => {
+        const header = document.querySelector('header');
+        const topBar = document.querySelector('.top-bar');
+        if (window.scrollY > 40) {
+            header.classList.add('scrolled');
+            topBar.style.display = 'none';
+        } else {
+            header.classList.remove('scrolled');
+            topBar.style.display = 'block';
+        }
+    });
+
+    // Slider Functionality with Creative Transitions
+    let currentSlideIndex = 0;
 let slides = document.querySelectorAll('.slide');
 let dots = document.querySelectorAll('.slider-dot');
 let isTransitioning = false;
@@ -228,11 +232,50 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // Mobile Menu Toggle
 const mobileMenu = document.querySelector('.mobile-menu');
-const navLinks = document.querySelector('.nav-links');
+const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
+const mobileMenuClose = document.querySelector('.mobile-menu-close');
+const body = document.body;
 
+// Open mobile menu
 mobileMenu.addEventListener('click', () => {
-    navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+    mobileMenuOverlay.classList.add('active');
+    body.style.overflow = 'hidden'; // Prevent body scroll
 });
+
+// Close mobile menu
+function closeMobileMenu() {
+    mobileMenuOverlay.classList.remove('active');
+    body.style.overflow = ''; // Restore body scroll
+}
+
+mobileMenuClose.addEventListener('click', closeMobileMenu);
+
+// Close mobile menu when clicking on overlay
+mobileMenuOverlay.addEventListener('click', (e) => {
+    if (e.target === mobileMenuOverlay) {
+        closeMobileMenu();
+    }
+});
+
+// Close mobile menu when clicking on menu links
+const mobileMenuLinks = document.querySelectorAll('.mobile-menu-links a');
+mobileMenuLinks.forEach(link => {
+    link.addEventListener('click', closeMobileMenu);
+});
+
+// Close mobile menu on escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mobileMenuOverlay.classList.contains('active')) {
+        closeMobileMenu();
+    }
+});
+
+// Prevent body scroll when mobile menu is open
+mobileMenuOverlay.addEventListener('touchmove', (e) => {
+    if (mobileMenuOverlay.classList.contains('active')) {
+        e.preventDefault();
+    }
+}, { passive: false });
 
 // Search Form Handler - Form artık doğrudan ilanlar sayfasına yönlendiriyor
 // JavaScript event listener kaldırıldı, form doğrudan submit oluyor
@@ -289,3 +332,5 @@ setInterval(() => {
     mainCurrentVitrinGroup++;
     showVitrinGroup(mainCurrentVitrinGroup);
 }, 6000);
+
+})(); // End of IIFE
