@@ -57,18 +57,18 @@ require_once __DIR__ . '/layout/header.php';
 
 <div class="max-w-7xl mx-auto">
     <!-- Header -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-        <div class="flex items-center justify-between">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6 mb-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
                     <i class="fas fa-users text-white"></i>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-800">Ekip Üyeleri Yönetimi</h1>
-                    <p class="text-gray-600">Hakkımızda sayfasındaki ekip üyelerini yönetebilirsiniz.</p>
+                    <h1 class="text-xl md:text-2xl font-bold text-gray-800">Ekip Üyeleri Yönetimi</h1>
+                    <p class="text-sm md:text-base text-gray-600">Hakkımızda sayfasındaki ekip üyelerini yönetebilirsiniz.</p>
                 </div>
             </div>
-            <a href="page-edit-hakkimizda.php" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+            <a href="page-edit-hakkimizda.php" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 text-center md:text-left">
                 <i class="fas fa-arrow-left mr-2"></i>Hakkımızda Sayfası
             </a>
         </div>
@@ -89,10 +89,10 @@ require_once __DIR__ . '/layout/header.php';
         </div>
     <?php endif; ?>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
         <!-- Ekip Üyesi Ekleme Formu -->
-        <div class="lg:col-span-1">
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="lg:col-span-1 order-2 lg:order-1">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6">
                 <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
                     <i class="fas fa-plus text-green-500 mr-2"></i>
                     Yeni Ekip Üyesi Ekle
@@ -157,8 +157,8 @@ require_once __DIR__ . '/layout/header.php';
         </div>
 
         <!-- Mevcut Ekip Üyeleri -->
-        <div class="lg:col-span-2">
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="lg:col-span-2 order-1 lg:order-2">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6">
                 <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
                     <i class="fas fa-list text-blue-500 mr-2"></i>
                     Mevcut Ekip Üyeleri (<?php echo count($teamMembers); ?>)
@@ -173,18 +173,18 @@ require_once __DIR__ . '/layout/header.php';
                     <div class="space-y-4">
                         <?php foreach ($teamMembers as $member): ?>
                             <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow duration-200">
-                                <div class="flex items-start space-x-4">
+                                <div class="flex flex-col md:flex-row md:items-start space-y-4 md:space-y-0 md:space-x-4">
                                     <img src="<?php echo htmlspecialchars($member['image_url'] ?: 'https://via.placeholder.com/80x80?text=No+Image'); ?>" 
                                          alt="<?php echo htmlspecialchars($member['name']); ?>" 
-                                         class="w-16 h-16 rounded-full object-cover flex-shrink-0">
+                                         class="w-16 h-16 rounded-full object-cover flex-shrink-0 mx-auto md:mx-0">
                                     
-                                    <div class="flex-1">
-                                        <div class="flex items-center justify-between mb-2">
+                                    <div class="flex-1 text-center md:text-left">
+                                        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-2 space-y-2 md:space-y-0">
                                             <div>
                                                 <h3 class="text-lg font-semibold text-gray-800"><?php echo htmlspecialchars($member['name']); ?></h3>
                                                 <p class="text-blue-600 font-medium"><?php echo htmlspecialchars($member['position']); ?></p>
                                             </div>
-                                            <div class="flex items-center space-x-2">
+                                            <div class="flex items-center justify-center md:justify-end space-x-2">
                                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo $member['is_active'] ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'; ?>">
                                                     <?php echo $member['is_active'] ? 'Aktif' : 'Pasif'; ?>
                                                 </span>
@@ -196,7 +196,7 @@ require_once __DIR__ . '/layout/header.php';
                                             <p class="text-gray-700 text-sm mb-3"><?php echo htmlspecialchars($member['description']); ?></p>
                                         <?php endif; ?>
                                         
-                                        <div class="flex items-center space-x-4 text-sm">
+                                        <div class="flex flex-col md:flex-row md:items-center space-y-1 md:space-y-0 md:space-x-4 text-sm">
                                             <span class="text-gray-500">
                                                 <i class="fas fa-calendar mr-1"></i>
                                                 Eklenme: <?php echo date('d.m.Y H:i', strtotime($member['created_at'])); ?>
@@ -210,13 +210,13 @@ require_once __DIR__ . '/layout/header.php';
                                         </div>
                                     </div>
                                     
-                                    <div class="flex flex-col space-y-2">
+                                    <div class="flex flex-row md:flex-col space-x-2 md:space-x-0 md:space-y-2 justify-center md:justify-start">
                                         <a href="team-member-edit.php?id=<?php echo $member['id']; ?>" 
-                                           class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors duration-200">
+                                           class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors duration-200 text-center">
                                             <i class="fas fa-edit mr-1"></i>Düzenle
                                         </a>
                                         <a href="team-member-delete.php?id=<?php echo $member['id']; ?>" 
-                                           class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors duration-200"
+                                           class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors duration-200 text-center"
                                            onclick="return confirm('Bu ekip üyesini silmek istediğinizden emin misiniz?')">
                                             <i class="fas fa-trash mr-1"></i>Sil
                                         </a>
@@ -233,7 +233,7 @@ require_once __DIR__ . '/layout/header.php';
 
 <!-- Image Upload Modal -->
 <div id="imageUploadModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
-    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+    <div class="relative top-10 md:top-20 mx-auto p-4 md:p-5 border w-11/12 md:w-96 shadow-lg rounded-md bg-white">
         <div class="mt-3">
             <h3 class="text-lg font-medium text-gray-900 mb-4">Resim Yükle</h3>
             <form id="imageUploadForm" enctype="multipart/form-data">
@@ -241,13 +241,13 @@ require_once __DIR__ . '/layout/header.php';
                     <input type="file" id="imageFile" name="image" accept="image/*" required 
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                 </div>
-                <div class="flex justify-end space-x-3">
+                <div class="flex flex-col md:flex-row justify-end space-y-2 md:space-y-0 md:space-x-3">
                     <button type="button" onclick="closeImageUpload()" 
-                            class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                            class="w-full md:w-auto bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">
                         İptal
                     </button>
                     <button type="submit" 
-                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                            class="w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">
                         <i class="fas fa-upload mr-2"></i>Yükle
                     </button>
                 </div>

@@ -203,12 +203,12 @@ $neighborhoods = $stmt->fetchAll();
         background: white;
         border-radius: 10px;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        padding: 30px;
+        padding: 15px;
         margin-bottom: 20px;
     }
     
     .section-title {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         font-weight: 600;
         color: #2c3e50;
         margin-bottom: 20px;
@@ -218,8 +218,8 @@ $neighborhoods = $stmt->fetchAll();
     
     .form-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 20px;
+        grid-template-columns: 1fr;
+        gap: 15px;
         margin-bottom: 30px;
     }
     
@@ -232,19 +232,21 @@ $neighborhoods = $stmt->fetchAll();
         margin-bottom: 5px;
         font-weight: 500;
         color: #2c3e50;
+        font-size: 14px;
     }
     
     .form-group input,
     .form-group select {
         width: 100%;
-        padding: 10px;
+        padding: 12px;
         border: 1px solid #ddd;
         border-radius: 5px;
         font-size: 14px;
+        box-sizing: border-box;
     }
     
     .btn {
-        padding: 10px 20px;
+        padding: 12px 20px;
         border: none;
         border-radius: 5px;
         cursor: pointer;
@@ -254,6 +256,8 @@ $neighborhoods = $stmt->fetchAll();
         display: inline-block;
         text-align: center;
         transition: all 0.3s ease;
+        width: 100%;
+        margin-bottom: 10px;
     }
     
     .btn-primary {
@@ -268,6 +272,10 @@ $neighborhoods = $stmt->fetchAll();
     .btn-danger {
         background: #e74c3c;
         color: white;
+        padding: 8px 12px;
+        font-size: 12px;
+        width: auto;
+        margin: 0;
     }
     
     .btn-danger:hover {
@@ -287,19 +295,26 @@ $neighborhoods = $stmt->fetchAll();
         width: 100%;
         border-collapse: collapse;
         margin-top: 20px;
+        font-size: 12px;
+        overflow-x: auto;
+        display: block;
+        white-space: nowrap;
     }
     
     .table th,
     .table td {
-        padding: 12px;
+        padding: 8px 6px;
         text-align: left;
         border-bottom: 1px solid #ddd;
+        min-width: 80px;
     }
     
     .table th {
         background: #f8f9fa;
         font-weight: 600;
         color: #2c3e50;
+        position: sticky;
+        top: 0;
     }
     
     .table tr:hover {
@@ -311,6 +326,7 @@ $neighborhoods = $stmt->fetchAll();
         margin-bottom: 20px;
         border-radius: 5px;
         font-weight: 500;
+        font-size: 14px;
     }
     
     .alert-success {
@@ -329,14 +345,18 @@ $neighborhoods = $stmt->fetchAll();
         display: flex;
         margin-bottom: 20px;
         border-bottom: 1px solid #ddd;
+        overflow-x: auto;
+        white-space: nowrap;
     }
     
     .tab {
-        padding: 10px 20px;
+        padding: 10px 15px;
         cursor: pointer;
         border-bottom: 2px solid transparent;
         font-weight: 500;
         color: #666;
+        font-size: 14px;
+        flex-shrink: 0;
     }
     
     .tab.active {
@@ -351,9 +371,77 @@ $neighborhoods = $stmt->fetchAll();
     .tab-content.active {
         display: block;
     }
+    
+    .neighborhoods-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-top: 15px;
+    }
+    
+    /* Tablet ve Desktop için */
+    @media (min-width: 768px) {
+        .cities-container {
+            padding: 30px;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+        }
+        
+        .form-grid {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .btn {
+            width: auto;
+            margin-bottom: 0;
+        }
+        
+        .btn-danger {
+            padding: 10px 20px;
+            font-size: 14px;
+        }
+        
+        .table {
+            font-size: 14px;
+            display: table;
+            white-space: normal;
+        }
+        
+        .table th,
+        .table td {
+            padding: 12px;
+            min-width: auto;
+        }
+        
+        .table th {
+            position: static;
+        }
+        
+        .tabs {
+            overflow-x: visible;
+            white-space: normal;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+        }
+        
+        .neighborhoods-grid {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        }
+    }
+    
+    @media (min-width: 1024px) {
+        .form-grid {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+    }
 </style>
 
-<div class="main-content">
+<div class="max-w-7xl mx-auto">
     <div class="cities-container">
         <h1 class="section-title">Şehir, İlçe ve Mahalle Yönetimi</h1>
         
@@ -372,7 +460,7 @@ $neighborhoods = $stmt->fetchAll();
         
         <!-- Şehirler Tab -->
         <div id="cities" class="tab-content active">
-            <h2>Şehir Ekle</h2>
+            <h2 style="font-size: 1.1rem; margin-bottom: 15px; color: #2c3e50;">Şehir Ekle</h2>
             <form method="POST" class="form-grid">
                 <input type="hidden" name="action" value="add_city">
                 <div class="form-group">
@@ -392,7 +480,7 @@ $neighborhoods = $stmt->fetchAll();
                 </div>
             </form>
             
-            <h2>Mevcut Şehirler</h2>
+            <h2 style="font-size: 1.1rem; margin: 20px 0 15px 0; color: #2c3e50;">Mevcut Şehirler</h2>
             <table class="table">
                 <thead>
                     <tr>
@@ -425,7 +513,7 @@ $neighborhoods = $stmt->fetchAll();
         
         <!-- İlçeler Tab -->
         <div id="districts" class="tab-content">
-            <h2>İlçe Ekle</h2>
+            <h2 style="font-size: 1.1rem; margin-bottom: 15px; color: #2c3e50;">İlçe Ekle</h2>
             <form method="POST" class="form-grid">
                 <input type="hidden" name="action" value="add_district">
                 <div class="form-group">
@@ -446,7 +534,7 @@ $neighborhoods = $stmt->fetchAll();
                 </div>
             </form>
             
-            <h2>Mevcut İlçeler</h2>
+            <h2 style="font-size: 1.1rem; margin: 20px 0 15px 0; color: #2c3e50;">Mevcut İlçeler</h2>
             <table class="table">
                 <thead>
                     <tr>
@@ -477,7 +565,7 @@ $neighborhoods = $stmt->fetchAll();
         
         <!-- Mahalleler Tab -->
         <div id="neighborhoods" class="tab-content">
-            <h2>Mahalle Ekle</h2>
+            <h2 style="font-size: 1.1rem; margin-bottom: 15px; color: #2c3e50;">Mahalle Ekle</h2>
             <form method="POST" class="form-grid">
                 <input type="hidden" name="action" value="add_neighborhood">
                 <div class="form-group">
@@ -501,12 +589,12 @@ $neighborhoods = $stmt->fetchAll();
             <!-- Mevcut Mahalleler -->
             <div id="existing-neighborhoods" style="margin-top: 30px; display: none;">
                 <h3>Bu İlçedeki Mevcut Mahalleler</h3>
-                <div id="neighborhoods-list" class="neighborhoods-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-top: 15px;">
+                <div id="neighborhoods-list" class="neighborhoods-grid" style="display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 15px;">
                     <!-- Mahalleler buraya yüklenecek -->
                 </div>
             </div>
             
-            <h2>Mevcut Mahalleler</h2>
+            <h2 style="font-size: 1.1rem; margin: 20px 0 15px 0; color: #2c3e50;">Mevcut Mahalleler</h2>
             <table class="table">
                 <thead>
                     <tr>

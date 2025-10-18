@@ -303,9 +303,7 @@ $currentSettings = $helper->getAllSettings();
         
     </style>
 
-<div class="main-content">
-        
-        
+<div class="max-w-7xl mx-auto">
         <!-- Settings Container -->
         <div class="settings-container">
             <div class="settings-header">

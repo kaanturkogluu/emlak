@@ -3,27 +3,14 @@
     
     <script>
         
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.getElementById('mainContent');
-            
-            if (sidebar && mainContent) {
-                // Desktop için sidebar toggle
-                if (window.innerWidth >= 1024) {
-                    sidebar.classList.toggle('-translate-x-full');
-                    sidebar.classList.toggle('lg:translate-x-0');
-                    mainContent.classList.toggle('ml-0');
-                    mainContent.classList.toggle('lg:ml-64');
-                }
-            }
-        }
-        
         function toggleMobileSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
             
-            sidebar.classList.toggle('-translate-x-full');
-            overlay.classList.toggle('hidden');
+            if (sidebar && overlay) {
+                sidebar.classList.toggle('-translate-x-full');
+                overlay.classList.toggle('hidden');
+            }
         }
         
         // Close sidebar when clicking overlay
@@ -47,8 +34,13 @@
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
             
-            if (window.innerWidth > 1024) {
+            if (window.innerWidth >= 1024) {
+                // Desktop: sidebar her zaman görünür
                 sidebar.classList.remove('-translate-x-full');
+                overlay.classList.add('hidden');
+            } else {
+                // Mobile: sidebar gizli
+                sidebar.classList.add('-translate-x-full');
                 overlay.classList.add('hidden');
             }
         });
@@ -57,7 +49,9 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 const sidebar = document.getElementById('sidebar');
-                if (!sidebar.classList.contains('-translate-x-full')) {
+                const overlay = document.getElementById('sidebarOverlay');
+                
+                if (sidebar && overlay && !overlay.classList.contains('hidden')) {
                     toggleMobileSidebar();
                 }
             }
@@ -68,8 +62,13 @@
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
             
-            if (window.innerWidth <= 1024) {
+            if (window.innerWidth < 1024) {
+                // Mobile: sidebar gizli
                 sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            } else {
+                // Desktop: sidebar görünür
+                sidebar.classList.remove('-translate-x-full');
                 overlay.classList.add('hidden');
             }
         });

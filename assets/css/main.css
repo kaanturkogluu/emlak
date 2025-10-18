@@ -1477,7 +1477,7 @@ footer::before {
     }
 
     .hero-slider {
-        margin-top: 96px; /* Adjusted for mobile header height */
+        margin-top: 0; /* Adjusted for mobile header height */
         height: 500px;
     }
 
@@ -1547,7 +1547,7 @@ footer::before {
     }
 
     .hero-slider {
-        margin-top: 92px; /* Adjusted for small mobile header height */
+        margin-top: 0; /* Adjusted for small mobile header height */
         height: 400px;
     }
 

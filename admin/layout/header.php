@@ -679,8 +679,8 @@ $helper = Helper::getInstance();
                 </div>
                 <span class="text-xl font-bold text-gray-800">Admin Panel</span>
             </div>
-            <button class="p-2 rounded-lg hover:bg-gray-100 transition-colors" onclick="toggleSidebar()">
-                <i class="fas fa-bars text-gray-600"></i>
+            <button class="p-2 rounded-lg hover:bg-gray-100 transition-colors lg:hidden" onclick="toggleMobileSidebar()">
+                <i class="fas fa-times text-gray-600"></i>
             </button>
         </div>
         
@@ -709,6 +709,10 @@ $helper = Helper::getInstance();
             <a href="page-contents.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 <?php echo (basename($_SERVER['PHP_SELF']) === 'page-contents.php') ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?>">
                 <i class="fas fa-file-alt w-5"></i>
                 <span class="font-medium">Sayfa İçerikleri</span>
+            </a>
+            <a href="team-members.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 <?php echo (basename($_SERVER['PHP_SELF']) === 'team-members.php' || basename($_SERVER['PHP_SELF']) === 'team-member-edit.php') ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?>">
+                <i class="fas fa-users w-5"></i>
+                <span class="font-medium">Ekip Üyeleri</span>
             </a>
             <a href="cities.php" class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 <?php echo (basename($_SERVER['PHP_SELF']) === 'cities.php') ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?>">
                 <i class="fas fa-map-marker-alt w-5"></i>
