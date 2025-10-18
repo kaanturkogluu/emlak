@@ -143,18 +143,142 @@ $helper = Helper::getInstance();
         
         
         @media (max-width: 768px) {
-            .contact-content {
-                grid-template-columns: 1fr;
-                gap: 30px;
+            .contact-page {
+                padding: 10px;
+            }
+            
+            .page-header {
+                padding: 30px 20px;
+                margin-bottom: 30px;
             }
             
             .page-title {
                 font-size: 2rem;
             }
             
-            .contact-info,
-            .contact-form {
-                padding: 25px;
+            .page-subtitle {
+                font-size: 1rem;
+            }
+            
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                margin-bottom: 30px;
+            }
+            
+            .contact-info {
+                padding: 25px 20px;
+            }
+            
+            .contact-info h3 {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+            
+            .contact-item {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .contact-item i {
+                font-size: 1.2rem;
+                margin-right: 15px;
+                width: 25px;
+            }
+            
+            .contact-item-content h4 {
+                font-size: 1rem;
+            }
+            
+            .contact-item-content p {
+                font-size: 0.9rem;
+            }
+            
+            .social-links {
+                justify-content: center;
+                gap: 10px;
+            }
+            
+            .social-link {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .map-section {
+                margin-top: 30px;
+                padding: 25px 20px;
+            }
+            
+            .map-section h3 {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+            
+            .map-container {
+                height: 300px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .contact-page {
+                padding: 5px;
+            }
+            
+            .page-header {
+                padding: 20px 15px;
+                margin-bottom: 20px;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+            }
+            
+            .page-subtitle {
+                font-size: 0.9rem;
+            }
+            
+            .contact-info {
+                padding: 20px 15px;
+            }
+            
+            .contact-info h3 {
+                font-size: 1.3rem;
+            }
+            
+            .contact-item {
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+            
+            .contact-item i {
+                font-size: 1.1rem;
+                margin-right: 12px;
+                width: 20px;
+            }
+            
+            .contact-item-content h4 {
+                font-size: 0.95rem;
+            }
+            
+            .contact-item-content p {
+                font-size: 0.85rem;
+            }
+            
+            .social-link {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .map-section {
+                padding: 20px 15px;
+            }
+            
+            .map-section h3 {
+                font-size: 1.3rem;
+            }
+            
+            .map-container {
+                height: 250px;
             }
         }
     </style>

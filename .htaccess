@@ -4,7 +4,8 @@ RewriteEngine On
 RewriteRule ^test/?$ test-rewrite.php [L]
 
 # Admin paneli yönlendirmeleri - Önce bunlar kontrol edilmeli
-RewriteRule ^giris/?$ admin/login.php [L]
+RewriteRule ^giris/?$ giris.php [L]
+ 
 RewriteRule ^admin/ilanlar/?$ admin/properties.php [L]
 RewriteRule ^admin/ilan/ekle/?$ admin/property-add.php [L]
 RewriteRule ^admin/ilan/duzenle/([0-9]+)/?$ admin/property-edit.php?id=$1 [L]

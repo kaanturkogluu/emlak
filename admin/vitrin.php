@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
 // Tüm ilanları al
 $allProperties = $property->getAll(['status' => 'active']);
-$vitrinProperties = $property->getAll(['status' => 'active', 'featured' => 1]);
+$vitrinProperties = $property->getFeatured(999); // Get all featured properties
 
 require_once __DIR__ . '/layout/header.php';
 ?>
@@ -62,7 +62,7 @@ require_once __DIR__ . '/layout/header.php';
 <?php endif; ?>
 
 <div class="form-container">
-    <form method="POST" action="">
+    <form id="vitrin-form" method="POST" action="">
         <input type="hidden" name="action" value="update_vitrin">
         
         <div class="form-group">
@@ -136,6 +136,13 @@ require_once __DIR__ . '/layout/header.php';
             </a>
         </div>
     </form>
+</div>
+
+<!-- Fixed Save Button for Mobile -->
+<div class="fixed-save-button">
+    <button type="submit" form="vitrin-form" class="btn btn-primary btn-fixed">
+        <i class="fas fa-save"></i> Vitrin İlanlarını Güncelle
+    </button>
 </div>
 
 <style>
@@ -287,6 +294,33 @@ require_once __DIR__ . '/layout/header.php';
     justify-content: center;
 }
 
+/* Fixed Save Button */
+.fixed-save-button {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 15px 20px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+    z-index: 999;
+    display: none;
+}
+
+.btn-fixed {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.btn-fixed:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
 @media (max-width: 768px) {
     .properties-grid {
         grid-template-columns: 1fr;
@@ -294,6 +328,21 @@ require_once __DIR__ . '/layout/header.php';
     
     .form-actions {
         flex-direction: column;
+    }
+    
+    /* Show fixed button on mobile */
+    .fixed-save-button {
+        display: block;
+    }
+    
+    /* Hide original form actions on mobile */
+    .form-actions {
+        display: none;
+    }
+    
+    /* Add bottom padding to content to prevent overlap */
+    .form-container {
+        padding-bottom: 100px;
     }
 }
 </style>

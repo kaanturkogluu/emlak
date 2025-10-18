@@ -189,9 +189,26 @@ $helper = Helper::getInstance();
         font-size: 1rem !important;
     }
     
-    section > div {
+    /* Ana içerik bölümü - resim üstte, yazı altta */
+    section > div > div:first-child {
         grid-template-columns: 1fr !important;
         gap: 2rem !important;
+    }
+    
+    /* Resim ve yazı sıralamasını değiştir */
+    section > div > div:first-child {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    /* Resmi üste al */
+    section > div > div:first-child > div:last-child {
+        order: -1 !important;
+    }
+    
+    /* Yazıyı alta al */
+    section > div > div:first-child > div:first-child {
+        order: 1 !important;
     }
     
     .stats-grid {
@@ -204,6 +221,12 @@ $helper = Helper::getInstance();
     
     .values-grid {
         grid-template-columns: 1fr !important;
+    }
+    
+    /* Diğer grid'ler için de düzenleme */
+    section > div {
+        grid-template-columns: 1fr !important;
+        gap: 2rem !important;
     }
 }
 </style>

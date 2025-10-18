@@ -89,7 +89,7 @@ require_once __DIR__ . '/layout/header.php';
         </div>
     <?php endif; ?>
 
-    <form action="" method="POST">
+    <form id="featured-form" action="" method="POST">
         <div class="properties-grid">
             <?php if (!empty($allProperties)): ?>
                 <?php foreach ($allProperties as $prop): ?>
@@ -150,6 +150,13 @@ require_once __DIR__ . '/layout/header.php';
             </button>
         </div>
     </form>
+</div>
+
+<!-- Fixed Save Button for Mobile -->
+<div class="fixed-save-button">
+    <button type="submit" form="featured-form" class="btn btn-primary btn-fixed">
+        <i class="fas fa-save"></i> Öne Çıkanları Kaydet
+    </button>
 </div>
 
 <style>
@@ -400,11 +407,50 @@ require_once __DIR__ . '/layout/header.php';
     box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
 }
 
+/* Fixed Save Button */
+.fixed-save-button {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 15px 20px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+    z-index: 999;
+    display: none;
+}
+
+.btn-fixed {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.btn-fixed:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
 @media (max-width: 768px) {
     .action-bar {
         flex-direction: column;
         gap: 15px;
         text-align: center;
+    }
+    
+    .action-bar > div {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    .badge {
+        margin-left: 0;
+        margin-bottom: 5px;
     }
     
     .properties-grid {
@@ -414,6 +460,21 @@ require_once __DIR__ . '/layout/header.php';
     
     .property-card {
         margin: 0 10px;
+    }
+    
+    /* Show fixed button on mobile */
+    .fixed-save-button {
+        display: block;
+    }
+    
+    /* Hide original form actions on mobile */
+    .form-actions {
+        display: none;
+    }
+    
+    /* Add bottom padding to content to prevent overlap */
+    .content-wrapper {
+        padding-bottom: 100px;
     }
 }
 </style>
